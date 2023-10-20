@@ -1,0 +1,27 @@
+$navbar-height: 48px
+
+.catalogue-wrapper
+  display: flex
+  margin: 2em 4em
+  flex: 1
+  max-height: calc(100% - $navbar-height)
+  padding: 1em 0
+  background: white
+
+  .list
+    flex: 2
+    overflow: auto
+    scrollbar-width: none
+    &::-webkit-scrollbar
+      display: none
+
+  .line
+    margin: 0 1em
+    display: table
+    border-left: 1px solid
+
+  .detail-wrapper
+    flex: 8
+    display: flex
+    justify-content: center
+    align-items: center
