@@ -1,15 +1,16 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron")
+const { app, BrowserWindow, ipcMain } = require("electron")
+const { openCatalogue } = require("./electron/catalogue.js")
 const path = require("node:path")
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     // fullscreen: true,
     webPreferences: {
-      // preload: path.join(__dirname, 'index.tsx')
+      preload: path.join(__dirname, "./electron/preload.ts"),
     },
   })
 
@@ -25,6 +26,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  ipcMain.handle("dialog:openCatalogue", openCatalogue)
   createWindow()
 
   app.on("activate", function () {
