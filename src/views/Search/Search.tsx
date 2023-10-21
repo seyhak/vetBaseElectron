@@ -5,13 +5,17 @@ import { Box } from "@mui/system"
 import { useCallback, useState } from "react"
 import { useNavigate } from "react-router"
 import { ViewsPaths } from "types/routes.types"
+import { createSearchParams } from "react-router-dom"
 
 const Search = () => {
   const navigate = useNavigate()
   const [textFieldValue, setTextFieldValue] = useState("")
 
   const onSearch = useCallback(() => {
-    navigate({ pathname: ViewsPaths.Catalogue, search: textFieldValue })
+    navigate({
+      pathname: ViewsPaths.Catalogue,
+      search: createSearchParams({ search: textFieldValue }).toString(),
+    })
   }, [textFieldValue, navigate])
 
   const onSearchChange = useCallback(

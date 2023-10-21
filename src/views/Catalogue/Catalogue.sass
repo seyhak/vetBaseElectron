@@ -4,24 +4,35 @@ $navbar-height: 48px
   display: flex
   margin: 2em 4em
   flex: 1
-  max-height: calc(100% - $navbar-height)
-  padding: 1em 0
-  background: white
+  flex-direction: column
 
-  .list
-    flex: 2
-    overflow: auto
-    scrollbar-width: none
-    &::-webkit-scrollbar
-      display: none
-
-  .line
-    margin: 0 1em
-    display: table
-    border-left: 1px solid
-
-  .detail-wrapper
-    flex: 8
+  .controllers-wrapper
     display: flex
-    justify-content: center
-    align-items: center
+    background: black
+    padding: 1em
+    margin-bottom: 1em
+    background: white
+    justify-content: flex-end
+
+  .list-wrapper
+    display: flex
+    flex: 1
+    background: white
+    overflow: hidden
+
+    .list
+      flex: 2
+      overflow: auto
+      scrollbar-width: none
+      &::-webkit-scrollbar
+        display: none
+
+    .line
+      margin: 0 1em
+
+    .detail-wrapper
+      flex: 8
+      display: flex
+      justify-content: center
+      align-items: center
+      margin: 1em 1em 1em 0
