@@ -1,6 +1,29 @@
-# Getting Started with Create React App
+# Vet Base Electron
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## TODO:
+
+* rewrite Backend in TS (figure out how to solve issues)
+* write backend tests
+* add FE tests
+
+### RUN APP
+
+#### RUN FE
+```
+1) yarn start
+```
+
+#### RUN ELECTRON
+```
+2) yarn el .
+```
+
+
+## This project utilizes:
+* https://www.slatejs.org/examples/richtext as text editor
+* https://mui.com/material-ui/react-text-field/
 
 ## Available Scripts
 
@@ -44,3 +67,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
