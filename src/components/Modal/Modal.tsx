@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 import "./Modal.sass"
 
-type ModalProps = {
+export type ModalProps = {
   title?: string
   titleProps?: TypographyOwnProps
   modalProps: Omit<MuiModalProps, "children">
@@ -33,5 +33,3 @@ export const Modal = ({
     </MuiModal>
   )
 }
-
-export default Modal
