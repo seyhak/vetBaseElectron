@@ -18,12 +18,14 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
     "sass": "^1.69.4",
     "slate": "^0.100.0",
+    "slate-history": "^0.100.0",
     "slate-react": "^0.100.0",
     "sqlite3": "^5.1.6",
     "typescript": "^4.4.2",
@@ -81,6 +83,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "electron": "^27.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",

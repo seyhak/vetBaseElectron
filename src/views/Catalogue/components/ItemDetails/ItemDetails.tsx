@@ -54,6 +54,7 @@ export const ItemDetails = ({ item }: ItemDetailsProps) => {
                   srcSet={pic}
                   src={`${pic}?w=164&h=164&fit=crop&auto=format`}
                   loading="lazy"
+                  alt={pic}
                 />
               </ImageListItem>
             ))}

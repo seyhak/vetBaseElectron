@@ -5,6 +5,7 @@ import {
   Typography,
   TypographyOwnProps,
   Divider,
+  Button,
 } from "@mui/material"
 import "./Modal.sass"
 
@@ -13,6 +14,7 @@ export type ModalProps = {
   titleProps?: TypographyOwnProps
   modalProps: Omit<MuiModalProps, "children">
   children?: React.ReactNode
+  onConfirmClick?: VoidFunction
 }
 
 export const Modal = ({
@@ -20,6 +22,7 @@ export const Modal = ({
   titleProps,
   modalProps,
   children,
+  onConfirmClick,
 }: ModalProps) => {
   return (
     <MuiModal {...modalProps} className="modal">
@@ -29,6 +32,13 @@ export const Modal = ({
         </Typography>
         <Divider className="modal-content-divider" />
         <Box className="modal-content-wrapper">{children}</Box>
+        <Divider className="modal-content-divider" />
+        <Box className="modal-footer-wrapper">
+          <Button onClick={onConfirmClick} variant="outlined">
+            {" "}
+            Confirm{" "}
+          </Button>
+        </Box>
       </Box>
     </MuiModal>
   )

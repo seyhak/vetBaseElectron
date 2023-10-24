@@ -1,17 +1,20 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { withHistory } from "slate-history"
 import { createEditor } from "slate"
 
 // Import the Slate components and React plugin.
-import { Slate, Editable, withReact } from "slate-react"
-import { Box, Typography } from "@mui/material"
+import { withReact } from "slate-react"
+import { Box, TextField } from "@mui/material"
 import { Modal, ModalProps } from "components/Modal/Modal"
 
 //ts part
-import { BaseEditor, Descendant } from "slate"
+import { BaseEditor } from "slate"
 import { ReactEditor } from "slate-react"
+import RichTextEditor from "components/RichTextEditor/RichTextEditor"
 
 type CustomElement = { type: "paragraph"; children: CustomText[] }
 type CustomText = { text: string }
+
 export type AddItemModalProps = {
   isAddingModalOpened: ModalProps["modalProps"]["open"]
   handleModalClose: ModalProps["modalProps"]["onClose"]
@@ -35,7 +38,11 @@ export const AddItemModal = ({
   handleModalClose,
 }: AddItemModalProps) => {
   // Create a Slate editor object that won't change across renders.
-  const [editor] = useState(() => withReact(createEditor()))
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  // const [editor] = useState(() => withReact(createEditor()))
+  const onConfirmClick = () => {
+    console.log("confirm click")
+  }
   return (
     <Modal
       modalProps={{
@@ -45,14 +52,16 @@ export const AddItemModal = ({
         "aria-describedby": "modal-add-position-description",
       }}
       title="Add position to the catalogue"
+      onConfirmClick={onConfirmClick}
     >
       <Box className="modal-add-position-wrapper">
-        <Typography id="modal-add-position-description">
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography>
-        <Slate editor={editor} initialValue={initialValue as any}>
-          <Editable />
-        </Slate>
+        <TextField
+          id="modal-add-position-description"
+          label="Title"
+          variant="outlined"
+          fullWidth
+        />
+        <RichTextEditor editor={editor} />
       </Box>
     </Modal>
   )

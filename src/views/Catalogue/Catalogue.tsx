@@ -50,7 +50,7 @@ export const Catalogue = () => {
 
   useEffect(() => {
     loadDb()
-  }, [location])
+  }, [location, loadDb])
 
   useEffect(() => {
     console.log("once")
