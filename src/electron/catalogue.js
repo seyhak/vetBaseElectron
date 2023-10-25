@@ -1,39 +1,35 @@
-const sqlite3 = require("sqlite3").verbose()
+const { CatalogueItem } = require("./models/catalogue-item")
+const { Sequelize } = require("sequelize")
+const { DB_PATH } = require("./constants.ts")
 
-const openCatalogue = () => {
-  console.log("satat.")
-  let db = new sqlite3.Database(":memory:", (err) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log("Connected to the in-memory SQlite database.")
+const openCatalogue = async () => {
+  const sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: DB_PATH,
   })
 
-  // close the database connection
-  db.close((err) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log("Close the database connection.")
+  // await CatalogueItem.sync({ alter: true })
+
+  const items = await CatalogueItem.findAll({
+    attributes: ["id", "title", "description"],
   })
+  sequelize.close()
+  console.log("items", items)
+  return items.map((item) => item.dataValues)
 }
 
-const createItem = () => {
-  console.log("createItem")
-  let db = new sqlite3.Database(":memory:", (err) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log("Connected to the in-memory SQlite database.")
+const createItem = async (event, title, serializedJSON) => {
+  const sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: DB_PATH,
+  })
+  const createdItem = await CatalogueItem.create({
+    title,
+    description: serializedJSON,
   })
 
-  // close the database connection
-  db.close((err) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log("Close the database connection.")
-  })
+  sequelize.close()
+  return JSON.stringify(createdItem.dataValues)
 }
 
 exports.openCatalogue = openCatalogue

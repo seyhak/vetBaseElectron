@@ -1,10 +1,14 @@
+import { Descendant } from "slate"
+
 export type Item = {
-  id: number
-  name: string
+  id: string
+  title: string
 } | null
 
-export type ItemDetailed = {
-  description: string
-  photos: Array<string>
-  notes: string
-} & Item
+export type ItemDetailed =
+  | ({
+      description: Descendant[]
+      photos: Array<string>
+      // notes: string
+    } & Item)
+  | null

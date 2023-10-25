@@ -19,6 +19,7 @@ export const ItemDetails = ({ item }: ItemDetailsProps) => {
   const detailedItem = {
     ...item,
     description:
+      item ||
       "Bakteria występuje w wielu serotypach, z których dwa wywołują cholerę u ludzi: O1 i O139. Serotyp O1 ma dwa biotypy: klasyczny i El Tor.",
     photos: [
       photoSrc,
@@ -37,7 +38,7 @@ export const ItemDetails = ({ item }: ItemDetailsProps) => {
   return (
     <Box className="item-details-wrapper">
       <Box className="item-details-header">
-        <Typography variant="h4">{item!.name}</Typography>
+        <Typography variant="h4">{item?.title}</Typography>
       </Box>
       <Divider className="divider" />
       <Box className="item-details-content">

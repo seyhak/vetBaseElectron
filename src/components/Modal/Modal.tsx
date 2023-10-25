@@ -12,7 +12,9 @@ import "./Modal.sass"
 export type ModalProps = {
   title?: string
   titleProps?: TypographyOwnProps
-  modalProps: Omit<MuiModalProps, "children">
+  modalProps: Omit<MuiModalProps, "children" | "onClose"> & {
+    onClose: () => void | MuiModalProps["onClose"]
+  }
   children?: React.ReactNode
   onConfirmClick?: VoidFunction
 }

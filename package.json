@@ -24,6 +24,7 @@
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
     "sass": "^1.69.4",
+    "sequelize": "^6.33.0",
     "slate": "^0.100.0",
     "slate-history": "^0.100.0",
     "slate-react": "^0.100.0",

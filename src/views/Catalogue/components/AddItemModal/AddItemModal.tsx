@@ -11,6 +11,10 @@ import { Modal, ModalProps } from "components/Modal/Modal"
 import { BaseEditor } from "slate"
 import { ReactEditor } from "slate-react"
 import RichTextEditor from "components/RichTextEditor/RichTextEditor"
+import {
+  getEditorChildrenDeserialized,
+  getEditorChildrenSerialized,
+} from "components/RichTextEditor/RichTextEditor.functions"
 
 type CustomElement = { type: "paragraph"; children: CustomText[] }
 type CustomText = { text: string }
@@ -27,21 +31,38 @@ declare module "slate" {
     Text: CustomText
   }
 }
-const initialValue = [
-  {
-    type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
-  },
-]
+
 export const AddItemModal = ({
   isAddingModalOpened,
   handleModalClose,
 }: AddItemModalProps) => {
   // Create a Slate editor object that won't change across renders.
+  const [title, setTitle] = useState("")
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
   // const [editor] = useState(() => withReact(createEditor()))
-  const onConfirmClick = () => {
-    console.log("confirm click")
+
+  const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value)
+  }
+  const onConfirmClick = async () => {
+    const serializedValue = getEditorChildrenSerialized(editor.children)
+    console.log(
+      "confirm click",
+      editor.children,
+      serializedValue,
+      "title",
+      title,
+    )
+    try {
+      const newItem = await (window as any).electronAPI.createItem(
+        title,
+        serializedValue,
+      )
+      handleModalClose?.()
+      console.log("newItem", newItem)
+    } catch (e) {
+      console.error(e)
+    }
   }
   return (
     <Modal
@@ -60,6 +81,7 @@ export const AddItemModal = ({
           label="Title"
           variant="outlined"
           fullWidth
+          onChange={onTitleChange}
         />
         <RichTextEditor editor={editor} />
       </Box>

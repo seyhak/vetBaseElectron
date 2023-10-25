@@ -7,6 +7,7 @@ import { MarkButton, toggleMark } from "./components/MarkButton/MarkButton"
 import { BlockButton } from "./components/BlockButton/BlockButton"
 import classNames from "classnames"
 import "./RichTextEditor.sass"
+import { EditableProps } from "slate-react/dist/components/editable"
 
 export enum ICON_NAMES {
   // mark
@@ -33,7 +34,7 @@ const HOTKEYS = {
   "mod+`": "code",
 } as any
 
-const initialValue: Descendant[] = [
+const initialValueDefault: Descendant[] = [
   {
     type: "paragraph",
     children: [{ text: "" }],
@@ -43,46 +44,58 @@ const initialValue: Descendant[] = [
 export type RichTextEditorProps = {
   className?: string
   editor: ReactEditor
+  initialValue?: Descendant[]
+  editableProps?: EditableProps
 }
 
-const RichTextEditor = ({ className, editor }: RichTextEditorProps) => {
+const RichTextEditor = ({
+  className,
+  editor,
+  initialValue = initialValueDefault,
+  editableProps,
+}: RichTextEditorProps) => {
   const renderElement = useCallback((props: any) => <Element {...props} />, [])
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, [])
 
   return (
     <div className={classNames(className, "rich-text-editor")}>
       <Slate editor={editor} initialValue={initialValue}>
-        <Toolbar>
-          <MarkButton format="bold" icon={ICON_NAMES.BOLD} />
-          <MarkButton format="italic" icon={ICON_NAMES.ITALIC} />
-          <MarkButton format="underline" icon={ICON_NAMES.UNDERLINED} />
-          <MarkButton format="code" icon={ICON_NAMES.CODE} />
-          <BlockButton format="heading-one" icon={ICON_NAMES.LOOKS_ONE} />
-          <BlockButton format="heading-two" icon={ICON_NAMES.LOOKS_TWO} />
-          <BlockButton format="block-quote" icon={ICON_NAMES.FORMAT_QUOTE} />
-          <BlockButton
-            format="numbered-list"
-            icon={ICON_NAMES.FORMAT_LIST_NUMBERED}
-          />
-          <BlockButton
-            format="bulleted-list"
-            icon={ICON_NAMES.FORMAT_LIST_BULLETED}
-          />
-          <BlockButton format="left" icon={ICON_NAMES.FORMAT_ALIGN_LEFT} />
-          <BlockButton format="center" icon={ICON_NAMES.FORMAT_ALIGN_CENTER} />
-          <BlockButton format="right" icon={ICON_NAMES.FORMAT_ALIGN_RIGHT} />
-          <BlockButton
-            format="justify"
-            icon={ICON_NAMES.FORMAT_ALIGN_JUSTIFY}
-          />
-        </Toolbar>
+        {!editableProps?.readOnly && (
+          <Toolbar>
+            <MarkButton format="bold" icon={ICON_NAMES.BOLD} />
+            <MarkButton format="italic" icon={ICON_NAMES.ITALIC} />
+            <MarkButton format="underline" icon={ICON_NAMES.UNDERLINED} />
+            <MarkButton format="code" icon={ICON_NAMES.CODE} />
+            <BlockButton format="heading-one" icon={ICON_NAMES.LOOKS_ONE} />
+            <BlockButton format="heading-two" icon={ICON_NAMES.LOOKS_TWO} />
+            <BlockButton format="block-quote" icon={ICON_NAMES.FORMAT_QUOTE} />
+            <BlockButton
+              format="numbered-list"
+              icon={ICON_NAMES.FORMAT_LIST_NUMBERED}
+            />
+            <BlockButton
+              format="bulleted-list"
+              icon={ICON_NAMES.FORMAT_LIST_BULLETED}
+            />
+            <BlockButton format="left" icon={ICON_NAMES.FORMAT_ALIGN_LEFT} />
+            <BlockButton
+              format="center"
+              icon={ICON_NAMES.FORMAT_ALIGN_CENTER}
+            />
+            <BlockButton format="right" icon={ICON_NAMES.FORMAT_ALIGN_RIGHT} />
+            <BlockButton
+              format="justify"
+              icon={ICON_NAMES.FORMAT_ALIGN_JUSTIFY}
+            />
+          </Toolbar>
+        )}
         <Editable
+          {...editableProps}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           className="editable"
           placeholder="Enter a description"
           spellCheck
-          autoFocus
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event as any)) {
