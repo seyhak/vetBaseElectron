@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { Box } from "@mui/system"
 import "./Catalogue.sass"
 import List from "@mui/material/List"
@@ -6,7 +5,6 @@ import ListItem from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import { Divider } from "@mui/material"
-import { useLocation } from "react-router-dom"
 
 import { NoItemPicked } from "./components/NoItemPicked/NoItemPicked"
 import { ItemDetails } from "./components/ItemDetails/ItemDetails"
@@ -30,11 +28,6 @@ export const Catalogue = () => {
     isAddingModalOpened,
     handleAddModalClose,
   } = useCatalogue()
-  const location = useLocation()
-
-  useEffect(() => {
-    console.log(location)
-  }, [location])
 
   return (
     <Box className="catalogue-wrapper">

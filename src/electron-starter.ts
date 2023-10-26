@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require("electron")
 const {
-  openCatalogue,
+  getListCatalogue,
   createItem,
   getDetailedItem,
   destroyItemById,
@@ -32,7 +32,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  ipcMain.handle("catalogue:openCatalogue", openCatalogue)
+  ipcMain.handle("catalogue:getListCatalogue", getListCatalogue)
   ipcMain.handle("catalogue:createItem", createItem)
   ipcMain.handle("catalogue:getDetailedItem", getDetailedItem)
   ipcMain.handle("catalogue:destroyItemById", destroyItemById)

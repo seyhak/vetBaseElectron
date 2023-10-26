@@ -1,7 +1,8 @@
 const { contextBridge, ipcRenderer } = require("electron")
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  openCatalogue: () => ipcRenderer.invoke("catalogue:openCatalogue"),
+  getListCatalogue: (searchPhase) =>
+    ipcRenderer.invoke("catalogue:getListCatalogue", searchPhase),
   createItem: (title, itemDescriptionJSON) =>
     ipcRenderer.invoke("catalogue:createItem", title, itemDescriptionJSON),
   getDetailedItem: (id) => ipcRenderer.invoke("catalogue:getDetailedItem", id),

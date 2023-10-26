@@ -8,7 +8,7 @@ export type Item = {
 export type ItemDetailed =
   | ({
       description: Descendant[]
-      photos: Array<string>
+      // photos: Array<string>
       // notes: string
     } & Item)
   | null

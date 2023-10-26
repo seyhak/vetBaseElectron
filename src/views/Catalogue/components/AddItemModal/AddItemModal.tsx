@@ -1,9 +1,4 @@
-import { useState, useMemo } from "react"
-import { withHistory } from "slate-history"
-import { createEditor } from "slate"
-
-// Import the Slate components and React plugin.
-import { withReact } from "slate-react"
+import { useState } from "react"
 import { Box, TextField } from "@mui/material"
 import { Modal, ModalProps } from "components/Modal/Modal"
 
@@ -11,10 +6,8 @@ import { Modal, ModalProps } from "components/Modal/Modal"
 import { BaseEditor } from "slate"
 import { ReactEditor } from "slate-react"
 import RichTextEditor from "components/RichTextEditor/RichTextEditor"
-import {
-  getEditorChildrenDeserialized,
-  getEditorChildrenSerialized,
-} from "components/RichTextEditor/RichTextEditor.functions"
+import { getEditorChildrenSerialized } from "components/RichTextEditor/RichTextEditor.functions"
+import { useRichTextEditor } from "components/RichTextEditor/useRichTextEditor"
 
 type CustomElement = { type: "paragraph"; children: CustomText[] }
 type CustomText = { text: string }
@@ -36,30 +29,17 @@ export const AddItemModal = ({
   isAddingModalOpened,
   handleModalClose,
 }: AddItemModalProps) => {
-  // Create a Slate editor object that won't change across renders.
   const [title, setTitle] = useState("")
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-  // const [editor] = useState(() => withReact(createEditor()))
+  const { editor } = useRichTextEditor()
 
   const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value)
   }
   const onConfirmClick = async () => {
     const serializedValue = getEditorChildrenSerialized(editor.children)
-    console.log(
-      "confirm click",
-      editor.children,
-      serializedValue,
-      "title",
-      title,
-    )
     try {
-      const newItem = await (window as any).electronAPI.createItem(
-        title,
-        serializedValue,
-      )
+      await (window as any).electronAPI.createItem(title, serializedValue)
       handleModalClose?.()
-      console.log("newItem", newItem)
     } catch (e) {
       console.error(e)
     }

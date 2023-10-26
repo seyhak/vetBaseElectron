@@ -2,6 +2,29 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## TODO:
+
+* rewrite Backend in TS (figure out how to solve issues)
+* write backend tests
+* add FE tests
+
+### RUN APP
+
+#### RUN FE
+```
+1) yarn start
+```
+
+#### RUN ELECTRON
+```
+2) yarn el .
+```
+
+
+## This project utilizes:
+* https://www.slatejs.org/examples/richtext as text editor
+* https://mui.com/material-ui/react-text-field/
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -45,6 +68,3 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-## This project utilizes:
-* https://www.slatejs.org/examples/richtext as text editor
-* https://mui.com/material-ui/react-text-field/
