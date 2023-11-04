@@ -4,6 +4,7 @@
   "main": "src/electron-starter.ts",
   "homepage": "./",
   "author": "Seyhak <seyhakly@gmail.com>",
+  "description": "Electron app for knowledge base",
   "license": "MIT",
   "private": false,
   "dependencies": {
@@ -19,6 +20,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "classnames": "^2.3.2",
+    "electron-squirrel-startup": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
@@ -39,12 +41,16 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "react-scripts start",
-    "el": "electron .",
+    "start": "set REACT_APP_DEV=1 & react-scripts start",
+    "eld": "set REACT_APP_DEV=1 & yarn electron .",
+    "el": "react-scripts build & yarn electron .",
     "watch": "tsc -w",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "efstart": "electron-forge start",
+    "efpackage": "electron-forge package",
+    "efmake": "electron-forge make"
   },
   "eslintConfig": {
     "rules": {
@@ -85,6 +91,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "electron": "^27.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
