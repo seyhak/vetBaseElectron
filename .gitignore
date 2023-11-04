@@ -24,3 +24,5 @@ yarn-error.log*
 
 # db
 /db
+# electron-forge products
+/out

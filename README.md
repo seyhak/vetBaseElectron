@@ -8,24 +8,34 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 * write backend tests
 * add FE tests
 
-### RUN APP
+### RUN APP DEV
 
 #### RUN FE
 ```
-1) yarn start
+yarn start
 ```
 
 #### RUN ELECTRON
 ```
-2) yarn el .
+yarn eld
 ```
 
+### RUN APP USING BUILD SETTINGS
+```
+yarn el
+```
+
+### BUILD APP USING ELECTRON-FORGE
+https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging#creating-a-distributable
+```
+yarn efmake
+```
 
 ## This project utilizes:
 * https://www.slatejs.org/examples/richtext as text editor
 * https://mui.com/material-ui/react-text-field/
 
-## Available Scripts
+## Available Scripts CRA
 
 In the project directory, you can run:
 
