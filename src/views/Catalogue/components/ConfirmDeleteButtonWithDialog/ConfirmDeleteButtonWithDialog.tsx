@@ -56,7 +56,7 @@ export const ConfirmDeleteButtonWithDialog = ({
         </DialogContent>
         <Divider className="divider" />
         <DialogActions>
-          <Button onClick={handleReject}>Disagree</Button>
+          <Button onClick={handleReject}>Cancel</Button>
           <Button onClick={handleConfirm} autoFocus>
             Agree
           </Button>
