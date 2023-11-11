@@ -41,16 +41,16 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "set REACT_APP_DEV=1 & react-scripts start",
+    "cra": "set REACT_APP_DEV=1 & react-scripts start",
     "eld": "set REACT_APP_DEV=1 & yarn electron .",
     "el": "react-scripts build & yarn electron .",
     "watch": "tsc -w",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "efstart": "electron-forge start",
-    "efpackage": "electron-forge package",
-    "efmake": "electron-forge make"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "react-scripts build & electron-forge make"
   },
   "eslintConfig": {
     "rules": {

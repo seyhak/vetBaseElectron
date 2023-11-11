@@ -100,10 +100,19 @@ export const useCatalogue = () => {
       setIsEditModeOn(false)
       await editItem(selectedItem!.id, title!, editor.children)
       await loadDb()
+      await loadDetailedItem(selectedItem!.id)
     } catch (e) {
       console.error(e)
     }
-  }, [title, editor.children, loadDb, editItem, setIsEditModeOn, selectedItem])
+  }, [
+    title,
+    editor.children,
+    loadDb,
+    editItem,
+    setIsEditModeOn,
+    loadDetailedItem,
+    selectedItem,
+  ])
 
   const onTitleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

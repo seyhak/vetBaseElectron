@@ -1,7 +1,10 @@
 import { useState } from "react"
-import { Box, TextField } from "@mui/material"
-import { Modal, ModalProps } from "components/Modal/Modal"
-
+import { Box, TextField, Divider } from "@mui/material"
+import { default as Dialog, DialogProps } from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import Button from "@mui/material/Button"
 //ts part
 import { BaseEditor } from "slate"
 import { ReactEditor } from "slate-react"
@@ -13,8 +16,8 @@ type CustomElement = { type: "paragraph"; children: CustomText[] }
 type CustomText = { text: string }
 
 export type AddItemModalProps = {
-  isAddingModalOpened: ModalProps["modalProps"]["open"]
-  handleModalClose: ModalProps["modalProps"]["onClose"]
+  isAddingModalOpened: DialogProps["open"]
+  handleModalClose: DialogProps["onClose"]
 }
 
 declare module "slate" {
@@ -39,32 +42,34 @@ export const AddItemModal = ({
     const serializedValue = getEditorChildrenSerialized(editor.children)
     try {
       await (window as any).electronAPI.createItem(title, serializedValue)
-      handleModalClose?.()
+      handleModalClose?.({} as Event, "backdropClick")
     } catch (e) {
       console.error(e)
     }
   }
   return (
-    <Modal
-      modalProps={{
-        open: isAddingModalOpened,
-        onClose: handleModalClose,
-        "aria-labelledby": "modal-add-position-title",
-        "aria-describedby": "modal-add-position-description",
-      }}
-      title="Add position to the catalogue"
-      onConfirmClick={onConfirmClick}
-    >
-      <Box className="modal-add-position-wrapper">
-        <TextField
-          id="modal-add-position-description"
-          label="Title"
-          variant="outlined"
-          fullWidth
-          onChange={onTitleChange}
-        />
-        <RichTextEditor editor={editor} />
-      </Box>
-    </Modal>
+    <Dialog open={isAddingModalOpened} onClose={handleModalClose}>
+      <DialogTitle>Add position to the catalogue</DialogTitle>
+      <DialogContent>
+        <Box className="modal-add-position-wrapper" sx={{ mt: 1 }}>
+          <TextField
+            id="modal-add-position-description"
+            label="Title"
+            variant="outlined"
+            fullWidth
+            required
+            inputProps={{
+              maxLength: 60,
+            }}
+            onChange={onTitleChange}
+          />
+          <RichTextEditor editor={editor} />
+        </Box>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Button onClick={onConfirmClick}>Confirm</Button>
+      </DialogActions>
+    </Dialog>
   )
 }

@@ -1,3 +1,5 @@
+const { CatalogueItem } = require("./electron/models/catalogue-item")
+
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require("electron")
 const {
@@ -9,20 +11,25 @@ const {
 } = require("./electron/catalogue.js")
 const path = require("node:path")
 
+async function synchronizeDb() {
+  await CatalogueItem.sync()
+}
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1600,
+    height: 1000,
     // fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, "./electron/preload.js"),
     },
   })
 
+  synchronizeDb()
   // and load the index.html of the app.
   const isDev = !!process.env.REACT_APP_DEV
-  console.log(123123, process.env)
+
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000")
     // Open the DevTools.

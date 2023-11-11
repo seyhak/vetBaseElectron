@@ -12,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 #### RUN FE
 ```
-yarn start
+yarn cra
 ```
 
 #### RUN ELECTRON
@@ -28,7 +28,7 @@ yarn el
 ### BUILD APP USING ELECTRON-FORGE
 https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging#creating-a-distributable
 ```
-yarn efmake
+yarn make
 ```
 
 ## This project utilizes:
