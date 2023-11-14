@@ -1,17 +1,22 @@
 ## IMPORTANT
-* [ ] categories/groups (each possition should be grouped by group/category)
+* [ ] add categories to add item
+* [x] add categories to edit item
+* [ ] categories manage section
 * [x] search phase information, reset search
+* [ ] add tests to electron and FE if reasonable with test DB
+* [ ] electron hot-reload
+* [ ] separate CRA from electron ? read before
 
 
 ### MAJOR
 
-* [ ] CSV export/import
 * [ ] Google Cloud sync
+* [ ] electron goes TS
+* [ ] CSV export/import
 
 
 ### MINOR
 
-* [ ] electron goes TS
-* [ ] add tests to electron and FE if reasonable
 * [ ] galaxy of animals - 3D
 * [ ] create form from create modal - useform
+* [ ] refactor useCatalogue to use useReducer?

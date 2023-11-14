@@ -1,4 +1,6 @@
 import { Descendant } from "slate"
+import { Category } from "./category"
+import { ModelTimestamps } from "./common"
 
 export type Item = {
   id: string
@@ -8,7 +10,9 @@ export type Item = {
 export type ItemDetailed =
   | ({
       description: Descendant[]
-      // photos: Array<string>
+      photos: string[]
+      Categories: Category
       // notes: string
-    } & Item)
+    } & Item &
+      ModelTimestamps)
   | null

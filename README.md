@@ -34,6 +34,8 @@ yarn make
 ## This project utilizes:
 * https://www.slatejs.org/examples/richtext as text editor
 * https://mui.com/material-ui/react-text-field/
+* https://www.electronjs.org/docs/
+* https://sequelize.org/docs as ORM
 
 ## Available Scripts CRA
 

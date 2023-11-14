@@ -13,7 +13,8 @@ export const useRichTextEditor = () => {
     (newContent: Descendant[]) => {
       // const isnewContentAnArray = Array.isArray(newContent) && newContent.length
       // const newContentAdjusted =
-      //   newContent && isnewContentAnArray ? newContent : undefined
+      // newContent && isnewContentAnArray ? newContent : undefined
+      // console.log(newContent, newContentAdjusted)
       editor.children = newContent
       editor.onChange()
     },
