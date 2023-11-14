@@ -1,18 +1,19 @@
 const { CatalogueItem } = require("./electron/models/catalogue-item")
+const {
+  Category,
+  CategoryCatalogueItemThroughTable,
+} = require("./electron/models/category")
 
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require("electron")
-const {
-  getListCatalogue,
-  createItem,
-  getDetailedItem,
-  destroyItemById,
-  updateItem,
-} = require("./electron/catalogue.js")
+const catalogueItemAPI = require("./electron/api/catalogue-item/catalogue-item")
+const categoryAPI = require("./electron/api/category/category")
 const path = require("node:path")
 
 async function synchronizeDb() {
-  await CatalogueItem.sync()
+  await CatalogueItem.sync({ alter: true })
+  await Category.sync({ alter: true })
+  await CategoryCatalogueItemThroughTable.sync({ alter: true })
 }
 
 function createWindow() {
@@ -44,11 +45,25 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  ipcMain.handle("catalogue:getListCatalogue", getListCatalogue)
-  ipcMain.handle("catalogue:createItem", createItem)
-  ipcMain.handle("catalogue:getDetailedItem", getDetailedItem)
-  ipcMain.handle("catalogue:destroyItemById", destroyItemById)
-  ipcMain.handle("catalogue:updateItem", updateItem)
+  ipcMain.handle(
+    "catalogue:getListCatalogue",
+    catalogueItemAPI.getListCatalogue,
+  )
+  ipcMain.handle("catalogue:createItem", catalogueItemAPI.createItem)
+  ipcMain.handle("catalogue:getDetailedItem", catalogueItemAPI.getDetailedItem)
+  ipcMain.handle("catalogue:destroyItemById", catalogueItemAPI.destroyItemById)
+  ipcMain.handle("catalogue:updateItem", catalogueItemAPI.updateItem)
+  ipcMain.handle("catalogue:getListCategories", categoryAPI.getListCategories)
+  ipcMain.handle(
+    "catalogue:getDetailedCategory",
+    categoryAPI.getDetailedCategory,
+  )
+  ipcMain.handle("catalogue:createCategory", categoryAPI.createCategory)
+  ipcMain.handle(
+    "catalogue:destroyCategoryById",
+    categoryAPI.destroyCategoryById,
+  )
+  ipcMain.handle("catalogue:updateCategory", categoryAPI.updateCategory)
   createWindow()
 
   app.on("activate", function () {

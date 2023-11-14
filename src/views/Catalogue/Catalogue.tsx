@@ -11,6 +11,7 @@ import { ItemDetails } from "./components/ItemDetails/ItemDetails"
 import { AddItemModal } from "./components/AddItemModal/AddItemModal"
 import { Controllers } from "./components/Controllers/Controllers"
 import { useCatalogue } from "./useCatalogue"
+import { CategoriesMultiSelectContext } from "components/CategoriesMultiSelect/useCategoriesMultiSelectContext"
 
 export const Catalogue = () => {
   const {
@@ -27,51 +28,54 @@ export const Catalogue = () => {
     editor,
     isAddingModalOpened,
     handleAddModalClose,
+    categoriesMultiSelectContext,
   } = useCatalogue()
 
   return (
-    <Box className="catalogue-wrapper">
-      <Controllers
-        onDeleteClick={onDeleteClick}
-        onAddClick={onAddClick}
-        onEditClick={onEditClick}
-        onSaveClick={onSaveClick}
-        isItemSelected={!!selectedItem}
-        isEditModeOn={isEditModeOn}
-      />
-      <Box className="list-wrapper">
-        <List className="list">
-          {itemsList?.map((listItem) => {
-            return (
-              <ListItem key={listItem?.id} dense>
-                <ListItemButton
-                  onClick={() => onItemClick(listItem)}
-                  selected={selectedItem?.id === listItem?.id}
-                >
-                  <ListItemText primary={listItem?.title} />
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
-        </List>
-        <Divider orientation="vertical" className="line" />
-        <Box className="detail-wrapper">
-          {selectedItem ? (
-            <ItemDetails
-              itemDetailed={itemDetailed}
-              onTitleChange={onTitleChange}
-              isEditModeOn={isEditModeOn}
-              editor={editor}
-            />
-          ) : (
-            <NoItemPicked />
-          )}
+    <CategoriesMultiSelectContext.Provider value={categoriesMultiSelectContext}>
+      <Box className="catalogue-wrapper">
+        <Controllers
+          onDeleteClick={onDeleteClick}
+          onAddClick={onAddClick}
+          onEditClick={onEditClick}
+          onSaveClick={onSaveClick}
+          isItemSelected={!!selectedItem}
+          isEditModeOn={isEditModeOn}
+        />
+        <Box className="list-wrapper">
+          <List className="list">
+            {itemsList?.map((listItem) => {
+              return (
+                <ListItem key={listItem?.id} dense>
+                  <ListItemButton
+                    onClick={() => onItemClick(listItem)}
+                    selected={selectedItem?.id === listItem?.id}
+                  >
+                    <ListItemText primary={listItem?.title} />
+                  </ListItemButton>
+                </ListItem>
+              )
+            })}
+          </List>
+          <Divider orientation="vertical" className="line" />
+          <Box className="detail-wrapper">
+            {selectedItem ? (
+              <ItemDetails
+                itemDetailed={itemDetailed}
+                onTitleChange={onTitleChange}
+                isEditModeOn={isEditModeOn}
+                editor={editor}
+              />
+            ) : (
+              <NoItemPicked />
+            )}
+          </Box>
         </Box>
+        <AddItemModal
+          isAddingModalOpened={isAddingModalOpened}
+          handleModalClose={handleAddModalClose}
+        />
       </Box>
-      <AddItemModal
-        isAddingModalOpened={isAddingModalOpened}
-        handleModalClose={handleAddModalClose}
-      />
-    </Box>
+    </CategoriesMultiSelectContext.Provider>
   )
 }

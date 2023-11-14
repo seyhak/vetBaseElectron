@@ -14,6 +14,7 @@ import RichTextEditor from "components/RichTextEditor/RichTextEditor"
 import { HistoryEditor } from "slate-history"
 import { ReactEditor } from "slate-react"
 import { BaseEditor } from "slate"
+import { CategoriesMultiSelect } from "components/CategoriesMultiSelect/CategoriesMultiSelect"
 
 type ItemDetailsProps = {
   itemDetailed: ItemDetailed
@@ -51,6 +52,8 @@ export const ItemDetails = ({
               />
             )}
           </Box>
+          <Divider className="divider" />
+          <CategoriesMultiSelect disabled={!isEditModeOn} />
           <Divider className="divider" />
           <Box className="item-details-content">
             <>

@@ -1,4 +1,4 @@
-const { DB_PATH } = require("../constants.ts")
+const { DB_PATH } = require("#root/constants.ts")
 const { Sequelize, DataTypes, Model } = require("sequelize")
 
 const sequelize = new Sequelize({
@@ -27,6 +27,7 @@ CatalogueItem.init(
   {
     sequelize,
     modelName: "CatalogueItem",
+    timestamps: true,
   },
 )
 
