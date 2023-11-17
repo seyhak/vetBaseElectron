@@ -1,7 +1,7 @@
 {
   "name": "vetBaseElectron",
   "version": "1.0.0",
-  "main": "src/electron-starter.ts",
+  "main": "electron/electron-starter.ts",
   "homepage": "./",
   "author": "Seyhak <seyhakly@gmail.com>",
   "description": "Electron app for knowledge base",
@@ -41,7 +41,7 @@
     ]
   },
   "imports": {
-    "#root/*": "./src/electron/*",
+    "#root/*": "./electron/*",
     "#components/*": "./src/components/*"
   },
   "scripts": {
