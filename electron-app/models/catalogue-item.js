@@ -1,10 +1,6 @@
-const { DB_PATH } = require("#root/constants.ts")
-const { Sequelize, DataTypes, Model } = require("sequelize")
+const { DataTypes, Model } = require("sequelize")
+const { sequelize } = require("./index")
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: DB_PATH,
-})
 
 class CatalogueItem extends Model {}
 

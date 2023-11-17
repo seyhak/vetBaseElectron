@@ -1,20 +1,9 @@
-const { CatalogueItem } = require("./electron/models/catalogue-item")
-const {
-  Category,
-  CategoryCatalogueItemThroughTable,
-} = require("./electron/models/category")
-
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require("electron")
-const catalogueItemAPI = require("./electron/api/catalogue-item/catalogue-item")
-const categoryAPI = require("./electron/api/category/category")
+const catalogueItemAPI = require("./api/catalogue-item/catalogue-item")
+const categoryAPI = require("./api/category/category")
 const path = require("node:path")
-
-async function synchronizeDb() {
-  await CatalogueItem.sync({ alter: true })
-  await Category.sync({ alter: true })
-  await CategoryCatalogueItemThroughTable.sync({ alter: true })
-}
+const { synchronizeDb } = require("./electron-starter.func.ts")
 
 function createWindow() {
   // Create the browser window.
@@ -23,7 +12,7 @@ function createWindow() {
     height: 1000,
     // fullscreen: true,
     webPreferences: {
-      preload: path.join(__dirname, "./electron/preload.js"),
+      preload: path.join(__dirname, "./preload.js"),
     },
   })
 

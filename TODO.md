@@ -3,20 +3,28 @@
 * [x] add categories to edit item
 * [ ] categories manage section
 * [x] search phase information, reset search
-* [ ] add tests to electron and FE if reasonable with test DB
-* [ ] electron hot-reload
-* [ ] separate CRA from electron ? read before
-
+* [x] add tests to electron and FE if reasonable with test DB
+* [x] adjust project structure - changes based on 
+`https://stackoverflow.com/questions/38397215/electron-new-app-structure` and `https://github.com/yhirose/react-typescript-electron-sample-with-create-react-app-and-electron-builder`
+ 
 
 ### MAJOR
 
 * [ ] Google Cloud sync
-* [ ] electron goes TS
+* [ ] electron goes TS and sequelize TS
 * [ ] CSV export/import
 
 
 ### MINOR
 
+* [ ] add proper docker stuff
+* [ ] change logo and add cute images
 * [ ] galaxy of animals - 3D
 * [ ] create form from create modal - useform
 * [ ] refactor useCatalogue to use useReducer?
+* [ ] setup debug env for VS - https://www.electronjs.org/docs/latest/tutorial/debugging-vscode
+* [ ] jest config "eltest": "jest electron --notify --config=jest.config.ts",
+
+#### FAILED
+
+* electron hot-reload - following https://www.tutorialspoint.com/hot-reload-in-electronjs and official github and npm docs https://www.npmjs.com/package/electron-reload and https://www.npmjs.com/package/electron-reloader doesnt work. 1rst throws error, second indeed reloads but whole window gets reloaded and console returns error.

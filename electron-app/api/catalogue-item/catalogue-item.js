@@ -1,22 +1,17 @@
-const { Category } = require("#root/models/category.js")
+const { Category, CategoryCatalogueItemThroughTable } = require("#root/models/category.js")
 const { CatalogueItem } = require("#root/models/catalogue-item.js")
 const { Sequelize, Op } = require("sequelize")
-const { DB_PATH, CATEGORY_KEYS } = require("#root/constants.ts")
+const { CATEGORY_KEYS } = require("#root/constants.ts")
 const { difference, pick } = require("lodash")
 
 const getListCatalogue = async (event, searchPhase) => {
-  const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: DB_PATH,
-  })
-
   const where = searchPhase
     ? {
         [Op.or]: [
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("title")), {
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("title")), {
             [Op.substring]: searchPhase,
           }),
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("description")), {
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
             [Op.substring]: searchPhase,
           }),
         ],
@@ -27,23 +22,21 @@ const getListCatalogue = async (event, searchPhase) => {
     attributes: ["id", "title", "description"],
     where,
   })
-  sequelize.close()
   // TODO write tests for this file and add TS
   return items.map((item) => item.dataValues)
 }
 
 const createItem = async (event, title, serializedJSON) => {
-  const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: DB_PATH,
-  })
-  const createdItem = await CatalogueItem.create({
-    title,
-    description: serializedJSON,
-  })
-
-  sequelize.close()
-  return JSON.stringify(createdItem.dataValues)
+  try {
+    const createdItem = await CatalogueItem.create({
+      title,
+      description: serializedJSON,
+    })
+    return JSON.stringify(createdItem.dataValues)
+  } catch (error) {
+    console.error(error)
+    return JSON.stringify(error)
+  }
 }
 
 const getDetailedItem = async (event, id) => {
@@ -80,41 +73,48 @@ const updateItem = async (event, id, content) => {
   console.log("updateItem", id, content)
   const categoryIds = content.categories
 
-  await CatalogueItem.update(content, {
-    where: {
-      id: id,
-    },
-  })
-  const catalogueItem = await CatalogueItem.findByPk(id, { include: Category })
-  const prevCategoriesIds = catalogueItem.dataValues.Categories.map(
-    (cat) => cat.dataValues.id,
-  )
-
-  const categoryIdsToRemove = difference(prevCategoriesIds, categoryIds)
-  const categoryIdsToAdd = difference(categoryIds, prevCategoriesIds)
-  console.log(
-    "categoryIdsToAdd",
-    categoryIdsToAdd,
-    "categoryIdsToRemove",
-    categoryIdsToRemove,
-  )
-
-  const categoriesToAdd = await Category.findAll({
-    where: {
-      id: {
-        [Sequelize.Op.in]: categoryIdsToAdd,
+  try {
+    await CatalogueItem.update(content, {
+      where: {
+        id: id,
       },
-    },
-  })
-  const categoriesToRemove = await Category.findAll({
-    where: {
-      id: {
-        [Sequelize.Op.in]: categoryIdsToRemove,
+    })
+
+    await CategoryCatalogueItemThroughTable.sync({alter: true})
+    const catalogueItem = await CatalogueItem.findByPk(id, { include: Category })
+    const prevCategoriesIds = catalogueItem.dataValues.Categories.map(
+      (cat) => cat.dataValues.id,
+    )
+    const categoryIdsToRemove = difference(prevCategoriesIds, categoryIds)
+    const categoryIdsToAdd = difference(categoryIds, prevCategoriesIds)
+    console.log(
+      "categoryIdsToAdd",
+      categoryIdsToAdd,
+      "categoryIdsToRemove",
+      categoryIdsToRemove,
+    )
+  
+    const categoriesToAdd = await Category.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.in]: categoryIdsToAdd,
+        },
       },
-    },
-  })
-  await catalogueItem.removeCategory(categoriesToRemove)
-  await catalogueItem.addCategory(categoriesToAdd)
+    })
+    const categoriesToRemove = await Category.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.in]: categoryIdsToRemove,
+        },
+      },
+    })
+    await catalogueItem.removeCategory(categoriesToRemove)
+    await catalogueItem.addCategory(categoriesToAdd)
+
+  } catch (error) {
+    console.error(error)
+    return error
+  }
 }
 
 exports.getDetailedItem = getDetailedItem
