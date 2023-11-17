@@ -9,6 +9,7 @@ const { app, BrowserWindow, ipcMain } = require("electron")
 const catalogueItemAPI = require("./api/catalogue-item/catalogue-item")
 const categoryAPI = require("./api/category/category")
 const path = require("node:path")
+// const electronReload = require('electron-reload')
 
 async function synchronizeDb() {
   await CatalogueItem.sync({ alter: true })
@@ -30,11 +31,19 @@ function createWindow() {
   synchronizeDb()
   // and load the index.html of the app.
   const isDev = !!process.env.REACT_APP_DEV
-
+  // If development environment 
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000")
     // Open the DevTools.
     mainWindow.webContents.openDevTools()
+    // require("electron-reload")(__dirname, {
+    //   electron: path.join(__dirname, "..", "node_modules", ".bin", "electron"), 
+    //   hardResetMethod: "exit",
+    //   debug: true
+    // })
+    try {
+      require('electron-reloader')(module)
+    } catch {}
   } else {
     mainWindow.loadFile("build/index.html")
   }

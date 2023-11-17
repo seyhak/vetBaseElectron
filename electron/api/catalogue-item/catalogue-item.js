@@ -12,21 +12,22 @@ const getListCatalogue = async (event, searchPhase) => {
 
   const where = searchPhase
     ? {
-        [Op.or]: [
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("title")), {
-            [Op.substring]: searchPhase,
-          }),
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("description")), {
-            [Op.substring]: searchPhase,
-          }),
-        ],
-      }
+      [Op.or]: [
+        sequelize.where(sequelize.fn("UPPER", sequelize.col("title")), {
+          [Op.substring]: searchPhase,
+        }),
+        sequelize.where(sequelize.fn("UPPER", sequelize.col("description")), {
+          [Op.substring]: searchPhase,
+        }),
+      ],
+    }
     : {}
 
   const items = await CatalogueItem.findAll({
     attributes: ["id", "title", "description"],
     where,
   })
+  console.log(12312421, "")
   sequelize.close()
   // TODO write tests for this file and add TS
   return items.map((item) => item.dataValues)
