@@ -1,7 +1,7 @@
 {
   "name": "vetBaseElectron",
   "version": "1.0.0",
-  "main": "src/electron-starter.ts",
+  "main": "electron-app/electron-starter.ts",
   "homepage": "./",
   "author": "Seyhak <seyhakly@gmail.com>",
   "description": "Electron app for knowledge base",
@@ -41,13 +41,14 @@
     ]
   },
   "imports": {
-    "#root/*": "./src/electron/*",
+    "#root/*": "./electron-app/*",
     "#components/*": "./src/components/*"
   },
   "scripts": {
     "prepare": "husky install",
     "cra": "set REACT_APP_DEV=1 & react-scripts start",
     "eld": "set REACT_APP_DEV=1 & yarn electron .",
+    "eltest": "set ELECTRON_APP_TESTING=1 & jest electron-app --config=jest.config.js",
     "el": "react-scripts build & yarn electron .",
     "watch": "tsc -w",
     "build": "react-scripts build",
@@ -104,6 +105,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "electron": "^27.0.1",
     "husky": "^8.0.3",
+    "jest": "^29.7.0",
     "lint-staged": "^15.0.2",
     "prettier": "^3.0.3"
   }

@@ -1,11 +1,6 @@
-const { DB_PATH } = require("#root/constants.ts")
-const { Sequelize, DataTypes, Model } = require("sequelize")
 const { CatalogueItem } = require("./catalogue-item")
-
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: DB_PATH,
-})
+const { DataTypes, Model } = require("sequelize")
+const { sequelize } = require("./index")
 
 class Category extends Model {}
 
@@ -46,6 +41,7 @@ CategoryCatalogueItemThroughTable.init(
   },
   {
     sequelize,
+    freezeTableName: true
   },
 )
 // https://sequelize.org/docs/v6/advanced-association-concepts/advanced-many-to-many/#the-best-of-both-worlds-the-super-many-to-many-relationship

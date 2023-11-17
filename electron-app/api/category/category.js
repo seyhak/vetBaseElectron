@@ -1,21 +1,16 @@
 const { pick } = require("lodash")
 const { Category } = require("#root/models/category.js")
 const { Sequelize, Op } = require("sequelize")
-const { DB_PATH, CATEGORY_KEYS } = require("#root/constants.ts")
+const { CATEGORY_KEYS } = require("#root/constants.ts")
 
 const getListCategories = async (event, searchPhase) => {
-  const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: DB_PATH,
-  })
-
   const where = searchPhase
     ? {
         [Op.or]: [
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("name")), {
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
             [Op.substring]: searchPhase,
           }),
-          sequelize.where(sequelize.fn("UPPER", sequelize.col("description")), {
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
             [Op.substring]: searchPhase,
           }),
         ],
@@ -26,7 +21,6 @@ const getListCategories = async (event, searchPhase) => {
     attributes: ["id", "name", "description", "createdAt", "updatedAt"],
     where,
   })
-  sequelize.close()
   // TODO write tests for this file and add TS
   await new Promise((resolve) => {
     setTimeout(resolve, 500)
@@ -39,27 +33,20 @@ const getListCategories = async (event, searchPhase) => {
 }
 
 const createCategory = async (event, name, description = "") => {
-  const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: DB_PATH,
-  })
-  const created = await Category.create({
-    name,
-    description,
-  })
-
-  sequelize.close()
-  return JSON.stringify(created.dataValues)
+  try {
+    const created = await Category.create({
+      name,
+      description,
+    })
+    return JSON.stringify(created.dataValues)
+  } catch (err) {
+    return err
+  }
 }
 
 const getDetailedCategory = async (event, id) => {
-  const sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: DB_PATH,
-  })
   const detailedItem = await Category.findByPk(id)
   console.log("detailedItem", detailedItem)
-  sequelize.close()
   return detailedItem.dataValues.map((cat) => pick(cat, CATEGORY_KEYS))
 }
 
