@@ -1,10 +1,18 @@
-import { useEffect, useCallback, useState, useContext } from "react"
-import { CategoriesMultiSelectContext } from "./useCategoriesMultiSelectContext"
+import { useEffect, useCallback, useState } from "react"
 import { Category } from "types/category"
+import { useCategoriesMultiSelectContext } from "./useCategoriesMultiSelectContext"
 
-export const useCategoriesMultiSelect = () => {
+export type UseCategoriesMultiSelectProps = {
+  categoriesMultiSelectContextValue: ReturnType<
+    typeof useCategoriesMultiSelectContext
+  >
+}
+
+export const useCategoriesMultiSelect = ({
+  categoriesMultiSelectContextValue,
+}: UseCategoriesMultiSelectProps) => {
   const { categoriesMultiSelectValue, setCategoriesMultiSelectValue } =
-    useContext(CategoriesMultiSelectContext)
+    categoriesMultiSelectContextValue
   const [allCategories, setAllCategories] = useState<Category[]>([])
   console.log("allCategories", allCategories)
 

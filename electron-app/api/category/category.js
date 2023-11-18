@@ -6,15 +6,15 @@ const { CATEGORY_KEYS } = require("#root/constants.ts")
 const getListCategories = async (event, searchPhase) => {
   const where = searchPhase
     ? {
-        [Op.or]: [
-          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
-            [Op.substring]: searchPhase,
-          }),
-          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
-            [Op.substring]: searchPhase,
-          }),
-        ],
-      }
+      [Op.or]: [
+        Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
+          [Op.substring]: searchPhase,
+        }),
+        Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
+          [Op.substring]: searchPhase,
+        }),
+      ],
+    }
     : {}
 
   const items = await Category.findAll({
@@ -60,7 +60,6 @@ const destroyCategoryById = async (event, id) => {
 }
 
 const updateCategory = async (event, id, content) => {
-  console.log(id)
   await Category.update(content, {
     where: {
       id: id,

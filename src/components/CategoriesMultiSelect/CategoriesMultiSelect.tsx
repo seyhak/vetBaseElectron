@@ -3,6 +3,7 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete"
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
 import CheckBoxIcon from "@mui/icons-material/CheckBox"
 import { Category } from "types/category"
+import { useCategoriesMultiSelectContext } from "./useCategoriesMultiSelectContext"
 import { useCategoriesMultiSelect } from "./useCategoriesMultiSelect"
 
 import "./CategoriesMultiSelect.sass"
@@ -14,10 +15,14 @@ type CreatedCategory = { name: string; inputValue: string }
 const filter = createFilterOptions<Category | CreatedCategory>()
 
 export type CategoriesMultiSelectProps = {
-  disabled: boolean
+  disabled?: boolean
+  categoriesMultiSelectContextValue: ReturnType<
+    typeof useCategoriesMultiSelectContext
+  >
 }
 export const CategoriesMultiSelect = ({
   disabled = false,
+  categoriesMultiSelectContextValue,
 }: CategoriesMultiSelectProps) => {
   const {
     allCategories,
@@ -25,7 +30,7 @@ export const CategoriesMultiSelect = ({
     setIsOpen,
     categoriesMultiSelectValue: value,
     onChange,
-  } = useCategoriesMultiSelect()
+  } = useCategoriesMultiSelect({ categoriesMultiSelectContextValue })
 
   return (
     <Autocomplete

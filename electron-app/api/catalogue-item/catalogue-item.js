@@ -1,8 +1,24 @@
-const { Category, CategoryCatalogueItemThroughTable } = require("#root/models/category.js")
+const { Category } = require("#root/models/category.js")
 const { CatalogueItem } = require("#root/models/catalogue-item.js")
 const { Sequelize, Op } = require("sequelize")
 const { CATEGORY_KEYS } = require("#root/constants.ts")
 const { difference, pick } = require("lodash")
+
+
+const handleCategoriesAddRemove = async (categoryIds, catalogueItem, remove = false) => {
+  const categories = await Category.findAll({
+    where: {
+      id: {
+        [Sequelize.Op.in]: categoryIds,
+      },
+    },
+  })
+  if(remove) {
+    await catalogueItem.removeCategory(categories)
+  } else {
+    await catalogueItem.addCategory(categories)
+  }
+}
 
 const getListCatalogue = async (event, searchPhase) => {
   const where = searchPhase
@@ -26,12 +42,15 @@ const getListCatalogue = async (event, searchPhase) => {
   return items.map((item) => item.dataValues)
 }
 
-const createItem = async (event, title, serializedJSON) => {
+const createItem = async (event, { title, description, categoryIds }) => {
   try {
     const createdItem = await CatalogueItem.create({
       title,
-      description: serializedJSON,
+      description,
     })
+    if(categoryIds) {
+      await handleCategoriesAddRemove(categoryIds, createdItem)
+    }
     return JSON.stringify(createdItem.dataValues)
   } catch (error) {
     console.error(error)
@@ -80,37 +99,15 @@ const updateItem = async (event, id, content) => {
       },
     })
 
-    await CategoryCatalogueItemThroughTable.sync({alter: true})
     const catalogueItem = await CatalogueItem.findByPk(id, { include: Category })
     const prevCategoriesIds = catalogueItem.dataValues.Categories.map(
       (cat) => cat.dataValues.id,
     )
     const categoryIdsToRemove = difference(prevCategoriesIds, categoryIds)
     const categoryIdsToAdd = difference(categoryIds, prevCategoriesIds)
-    console.log(
-      "categoryIdsToAdd",
-      categoryIdsToAdd,
-      "categoryIdsToRemove",
-      categoryIdsToRemove,
-    )
   
-    const categoriesToAdd = await Category.findAll({
-      where: {
-        id: {
-          [Sequelize.Op.in]: categoryIdsToAdd,
-        },
-      },
-    })
-    const categoriesToRemove = await Category.findAll({
-      where: {
-        id: {
-          [Sequelize.Op.in]: categoryIdsToRemove,
-        },
-      },
-    })
-    await catalogueItem.removeCategory(categoriesToRemove)
-    await catalogueItem.addCategory(categoriesToAdd)
-
+    await handleCategoriesAddRemove(categoryIdsToAdd, catalogueItem)
+    await handleCategoriesAddRemove(categoryIdsToRemove, catalogueItem, true)
   } catch (error) {
     console.error(error)
     return error

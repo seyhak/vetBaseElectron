@@ -2,12 +2,6 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## TODO:
-
-* rewrite Backend in TS (figure out how to solve issues)
-* write backend tests
-* add FE tests
-
 ### RUN APP DEV
 
 #### RUN FE
@@ -18,6 +12,11 @@ yarn cra
 #### RUN ELECTRON
 ```
 yarn eld
+```
+
+#### RUN ELECTRON TESTS
+```
+yarn eltest
 ```
 
 ### RUN APP USING BUILD SETTINGS
@@ -36,6 +35,91 @@ yarn make
 * https://mui.com/material-ui/react-text-field/
 * https://www.electronjs.org/docs/
 * https://sequelize.org/docs as ORM
+
+## ELECTRON API
+
+### catalogue item
+
+#### getListCatalogue
+```
+getListCatalogue(event, searchPhase) -> {
+    id: UUID,
+    title: string,
+    description: JSON for richEditor (may need JSON.parse)
+}
+```
+
+#### createItem
+```
+createItem(event, { title, description, categoryIds }) -> str(error JSON) | undefined
+```
+
+#### getDetailedItem
+```
+getDetailedItem(event, id) -> str{
+    id: UUID
+    title: string
+    description: JSON for richEditor
+    createdAt: string
+    updatedAt: string:
+    Categories: [
+        id: UUID,
+        name: string,
+        description: string,
+        updatedAt: string
+    ]
+}
+```
+
+#### destroyItemById
+```
+destroyItemById(event, id) -> undefined
+```
+
+#### updateItem
+```
+updateItem(event, id, content: item properties) -> undefined | error
+```
+
+### category
+
+#### getListCatalogue
+```
+getListCatalogue(event, searchPhase) -> {
+    id: UUID,
+    title: string,
+    description: JSON for richEditor (may need JSON.parse)
+}
+```
+
+#### createCategory
+```
+createCategory(event, name, description = "") -> {
+    id: UUID,
+    title: string,
+    description: JSON for richEditor (may need JSON.parse)
+}
+```
+
+#### getDetailedCategory
+```
+getDetailedCategory(event, id) -> str{
+    id: UUID,
+    name: string,
+    description: string,
+    updatedAt: string
+}
+```
+
+#### destroyCategoryById
+```
+destroyCategoryById(event, id) -> undefined
+```
+
+#### updateCategory
+```
+updateCategory(event, id, content) -> undefined
+```
 
 ## Available Scripts CRA
 

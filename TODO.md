@@ -1,7 +1,7 @@
 ## IMPORTANT
-* [ ] add categories to add item
+* [x] add categories to add item
 * [x] add categories to edit item
-* [ ] categories manage section
+* [ ] categories manage section -> reshape catalogue to show categories which will be expanded to show items in the category
 * [x] search phase information, reset search
 * [x] add tests to electron and FE if reasonable with test DB
 * [x] adjust project structure - changes based on 
@@ -17,6 +17,7 @@
 
 ### MINOR
 
+* [ ] add proper error informations on FE
 * [ ] add proper docker stuff
 * [ ] change logo and add cute images
 * [ ] galaxy of animals - 3D
