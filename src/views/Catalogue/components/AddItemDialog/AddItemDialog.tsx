@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Box, TextField, Divider } from "@mui/material"
 import { default as Dialog, DialogProps } from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
@@ -9,13 +8,15 @@ import Button from "@mui/material/Button"
 import { BaseEditor } from "slate"
 import { ReactEditor } from "slate-react"
 import RichTextEditor from "components/RichTextEditor/RichTextEditor"
-import { getEditorChildrenSerialized } from "components/RichTextEditor/RichTextEditor.functions"
-import { useRichTextEditor } from "components/RichTextEditor/useRichTextEditor"
+import { CategoriesMultiSelect } from "components/CategoriesMultiSelect/CategoriesMultiSelect"
+
+import "./AddItemDialog.sass"
+import { useAddItemDialog } from "./useAddItemDialog"
 
 type CustomElement = { type: "paragraph"; children: CustomText[] }
 type CustomText = { text: string }
 
-export type AddItemModalProps = {
+export type AddItemDialogProps = {
   isAddingModalOpened: DialogProps["open"]
   handleModalClose: DialogProps["onClose"]
 }
@@ -28,32 +29,31 @@ declare module "slate" {
   }
 }
 
-export const AddItemModal = ({
+export const AddItemDialog = ({
   isAddingModalOpened,
   handleModalClose,
-}: AddItemModalProps) => {
-  const [title, setTitle] = useState("")
-  const { editor } = useRichTextEditor()
+}: AddItemDialogProps) => {
+  const {
+    onTitleChange,
+    editor,
+    onConfirmClick,
+    categoriesMultiSelectContext,
+    onClose,
+  } = useAddItemDialog({
+    handleModalClose,
+  })
 
-  const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value)
-  }
-  const onConfirmClick = async () => {
-    const serializedValue = getEditorChildrenSerialized(editor.children)
-    try {
-      await (window as any).electronAPI.createItem(title, serializedValue)
-      handleModalClose?.({} as Event, "backdropClick")
-    } catch (e) {
-      console.error(e)
-    }
-  }
   return (
-    <Dialog open={isAddingModalOpened} onClose={handleModalClose}>
+    <Dialog
+      open={isAddingModalOpened}
+      onClose={onClose}
+      className="add-item-dialog"
+    >
       <DialogTitle>Add position to the catalogue</DialogTitle>
-      <DialogContent>
-        <Box className="modal-add-position-wrapper" sx={{ mt: 1 }}>
+      <DialogContent dividers>
+        <Box className="modal-add-position-wrapper">
           <TextField
-            id="modal-add-position-description"
+            className="title-input"
             label="Title"
             variant="outlined"
             fullWidth
@@ -63,10 +63,13 @@ export const AddItemModal = ({
             }}
             onChange={onTitleChange}
           />
+          <CategoriesMultiSelect
+            categoriesMultiSelectContextValue={categoriesMultiSelectContext}
+          />
+          <Divider />
           <RichTextEditor editor={editor} />
         </Box>
       </DialogContent>
-      <Divider />
       <DialogActions>
         <Button onClick={onConfirmClick}>Confirm</Button>
       </DialogActions>

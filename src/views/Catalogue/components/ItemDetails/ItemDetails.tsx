@@ -1,3 +1,4 @@
+import { useContext } from "react"
 import {
   Box,
   Typography,
@@ -15,6 +16,10 @@ import { HistoryEditor } from "slate-history"
 import { ReactEditor } from "slate-react"
 import { BaseEditor } from "slate"
 import { CategoriesMultiSelect } from "components/CategoriesMultiSelect/CategoriesMultiSelect"
+import {
+  CategoriesMultiSelectContext,
+  useCategoriesMultiSelectContext,
+} from "components/CategoriesMultiSelect/useCategoriesMultiSelectContext"
 
 type ItemDetailsProps = {
   itemDetailed: ItemDetailed
@@ -29,6 +34,9 @@ export const ItemDetails = ({
   onTitleChange,
   editor,
 }: ItemDetailsProps) => {
+  const categoriesMultiSelectContextValue = useContext(
+    CategoriesMultiSelectContext,
+  )
   const description = itemDetailed?.description
   const initialDescription =
     description && Array.isArray(description) && itemDetailed.description.length
@@ -53,7 +61,12 @@ export const ItemDetails = ({
             )}
           </Box>
           <Divider className="divider" />
-          <CategoriesMultiSelect disabled={!isEditModeOn} />
+          <CategoriesMultiSelect
+            disabled={!isEditModeOn}
+            categoriesMultiSelectContextValue={
+              categoriesMultiSelectContextValue
+            }
+          />
           <Divider className="divider" />
           <Box className="item-details-content">
             <>

@@ -18,13 +18,13 @@ const getListOfCatalogueItemsAndVerifyType = async () => {
 describe("catalogue-item", () => {
   describe("createItem", () => {
     beforeEach(async () => {
-      await CatalogueItem.sync({force: true})
+      await synchronizeDb(true)
     })
     test("create properly", async () => {
       const preTestList = await getListOfCatalogueItemsAndVerifyType()
       expect(preTestList).toHaveLength(0)
 
-      const creationResult = await createItem({}, "test input 1", {})
+      const creationResult = await createItem({}, { title: "test input 1", description: {}})
       expect(typeof creationResult).toBe("string")
       const jsonResult = JSON.parse(creationResult)
       expect(jsonResult).toMatchObject({
@@ -45,11 +45,70 @@ describe("catalogue-item", () => {
         },)
       ])
     })
+    test("create with category", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(preTestList).toHaveLength(0)
+
+      const category1 = await Category.create({ name: "cat1", description: "i am dino" })
+      const category2 = await Category.create({ name: "cat2" })
+      await Category.create({ name: "cat3" })
+      expect(await Category.count()).toEqual(3)
+
+      const creationResult = await createItem({}, { title: "test input 1", description: {}, categoryIds: [
+        category1.id,
+        category2.id
+      ]})
+      console.log('creationResult', creationResult)
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toMatchObject({
+        id: expect.any(String),
+        title: expect.any(String),
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
+
+      const createdItemStr = await getDetailedItem({}, jsonResult.id)
+      const createdItem = JSON.parse(createdItemStr)
+      expect(createdItem.Categories).toHaveLength(2)
+      expect(createdItem).toMatchObject({
+        id: expect.any(String),
+        title: expect.any(String),
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+        Categories: expect.arrayContaining([
+          {
+            id: expect.any(String),
+            name: "cat1",
+            description: "i am dino",
+            updatedAt: expect.any(String),
+          },
+          {
+            id: expect.any(String),
+            name: "cat2",
+            description: null,
+            updatedAt: expect.any(String),
+          },
+        ])
+      })
+
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 1)
+      expect(postTestList).toEqual([
+        expect.objectContaining({
+          "description": expect.any(Object),
+          "id": expect.any(String),
+          "title": "test input 1",
+        },)
+      ])
+    })
     test.each([null, undefined])("create failed, no title - %s", async (title) => {
       const preTestList = await getListOfCatalogueItemsAndVerifyType()
       expect(preTestList).toHaveLength(0)
 
-      const creationResult = await createItem({}, title, {})
+      const creationResult = await createItem({}, { title, description: {}})
       expect(typeof creationResult).toBe("string")
       const jsonResult = JSON.parse(creationResult)
       expect(jsonResult).toMatchObject({
@@ -68,7 +127,7 @@ describe("catalogue-item", () => {
     test("update with categories", async () => {
       const preTestList = await getListOfCatalogueItemsAndVerifyType()
 
-      const creationResult = await createItem({}, "test input 1", {})
+      const creationResult = await createItem({}, { title: "test input 1", description: {}})
       expect(typeof creationResult).toBe("string")
       const jsonResult = JSON.parse(creationResult)
       expect(jsonResult).toMatchObject({
@@ -147,8 +206,8 @@ describe("catalogue-item", () => {
     test("success", async () => {
       const result1 = await getListOfCatalogueItemsAndVerifyType()
       expect(result1).toEqual([])
-      await createItem({}, "test input 1", {})
-      await createItem({}, "test input 2", {})
+      await CatalogueItem.create({title: "test input 1"})
+      await CatalogueItem.create({title: "test input 2"})
       const result2 = await getListOfCatalogueItemsAndVerifyType()
       expect(result2).toHaveLength(2)
       expect(result2).toEqual([

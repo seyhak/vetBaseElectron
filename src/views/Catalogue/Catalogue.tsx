@@ -8,7 +8,7 @@ import { Divider } from "@mui/material"
 
 import { NoItemPicked } from "./components/NoItemPicked/NoItemPicked"
 import { ItemDetails } from "./components/ItemDetails/ItemDetails"
-import { AddItemModal } from "./components/AddItemModal/AddItemModal"
+import { AddItemDialog } from "./components/AddItemDialog/AddItemDialog"
 import { Controllers } from "./components/Controllers/Controllers"
 import { useCatalogue } from "./useCatalogue"
 import { CategoriesMultiSelectContext } from "components/CategoriesMultiSelect/useCategoriesMultiSelectContext"
@@ -71,7 +71,7 @@ export const Catalogue = () => {
             )}
           </Box>
         </Box>
-        <AddItemModal
+        <AddItemDialog
           isAddingModalOpened={isAddingModalOpened}
           handleModalClose={handleAddModalClose}
         />
