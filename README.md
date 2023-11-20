@@ -5,121 +5,43 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ### RUN APP DEV
 
 #### RUN FE
+
 ```
 yarn cra
 ```
 
 #### RUN ELECTRON
+
 ```
 yarn eld
 ```
 
 #### RUN ELECTRON TESTS
+
 ```
 yarn eltest
 ```
 
 ### RUN APP USING BUILD SETTINGS
+
 ```
 yarn el
 ```
 
 ### BUILD APP USING ELECTRON-FORGE
+
 https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging#creating-a-distributable
+
 ```
 yarn make
 ```
 
 ## This project utilizes:
-* https://www.slatejs.org/examples/richtext as text editor
-* https://mui.com/material-ui/react-text-field/
-* https://www.electronjs.org/docs/
-* https://sequelize.org/docs as ORM
 
-## ELECTRON API
-
-### catalogue item
-
-#### getListCatalogue
-```
-getListCatalogue(event, searchPhase) -> {
-    id: UUID,
-    title: string,
-    description: JSON for richEditor (may need JSON.parse)
-}
-```
-
-#### createItem
-```
-createItem(event, { title, description, categoryIds }) -> str(error JSON) | undefined
-```
-
-#### getDetailedItem
-```
-getDetailedItem(event, id) -> str{
-    id: UUID
-    title: string
-    description: JSON for richEditor
-    createdAt: string
-    updatedAt: string:
-    Categories: [
-        id: UUID,
-        name: string,
-        description: string,
-        updatedAt: string
-    ]
-}
-```
-
-#### destroyItemById
-```
-destroyItemById(event, id) -> undefined
-```
-
-#### updateItem
-```
-updateItem(event, id, content: item properties) -> undefined | error
-```
-
-### category
-
-#### getListCatalogue
-```
-getListCatalogue(event, searchPhase) -> {
-    id: UUID,
-    title: string,
-    description: JSON for richEditor (may need JSON.parse)
-}
-```
-
-#### createCategory
-```
-createCategory(event, name, description = "") -> {
-    id: UUID,
-    title: string,
-    description: JSON for richEditor (may need JSON.parse)
-}
-```
-
-#### getDetailedCategory
-```
-getDetailedCategory(event, id) -> str{
-    id: UUID,
-    name: string,
-    description: string,
-    updatedAt: string
-}
-```
-
-#### destroyCategoryById
-```
-destroyCategoryById(event, id) -> undefined
-```
-
-#### updateCategory
-```
-updateCategory(event, id, content) -> undefined
-```
+- https://www.slatejs.org/examples/richtext as text editor
+- https://mui.com/material-ui/react-text-field/
+- https://www.electronjs.org/docs/
+- https://sequelize.org/docs as ORM
 
 ## Available Scripts CRA
 
@@ -164,3 +86,21 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## PRs & branches naming convention:
+
+- `https://www.conventionalcommits.org/en/v1.0.0/?fbclid=IwAR1-XIZHvaIvlCQa604mobWt5yG1Gv2rkrQEk_IaCjUP4quLwpoYPS_LJdk`
+- `https://githubflow.github.io/?fbclid=IwAR0-yzG-mMeCtw0g30GtQmI4TJv_YsVotS4A9tRbEhsoC9y6ptgjSapH_ys`
+- `https://tilburgsciencehub.com/building-blocks/collaborate-and-share-your-work/use-github/naming-git-branches/?fbclid=IwAR2q5GloZ9AUV6eDiueU2VMsM_7Z0L-WHpK-sELwbII43YS3c-6xq6ke5VE`
+
+```
+branch: snake case feature descriptive
+type: fix/feat - !breaking changes
+```
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```

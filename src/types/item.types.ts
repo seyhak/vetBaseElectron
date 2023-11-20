@@ -2,9 +2,19 @@ import { Descendant } from "slate"
 import { Category } from "./category"
 import { ModelTimestamps } from "./common"
 
+export type CatalogueItem = {
+  id: string
+  name: string
+  description: string
+  groupId: string | null
+}
+
 export type Item = {
   id: string
-  title: string
+  name: string
+  description: string
+  groupId: string | null
+  items?: CatalogueItem[]
 } | null
 
 export type ItemDetailed =
@@ -17,8 +27,4 @@ export type ItemDetailed =
       ModelTimestamps)
   | null
 
-export type GetListCatalogueReturnItemDetailed = {
-  id: string
-  title: string
-  description: string
-}
+export type GetListCatalogueReturnItemDetailed = CatalogueItem

@@ -1,5 +1,5 @@
 export type GetListCatalogueReturnItemDetailed = {
   id: string
-  title: string
+  name: string
   description: string
 }

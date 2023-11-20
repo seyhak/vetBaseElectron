@@ -11,12 +11,12 @@ export type UseAddItemDialogProps = {
 export const useAddItemDialog = ({
   handleModalClose,
 }: UseAddItemDialogProps) => {
-  const [title, setTitle] = useState("")
+  const [name, setName] = useState("")
   const { editor } = useRichTextEditor()
   const categoriesMultiSelectContext = useCategoriesMultiSelectContext()
 
-  const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value)
+  const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value)
   }
   const resetState = useCallback(() => {
     categoriesMultiSelectContext.setCategoriesMultiSelectValue([])
@@ -26,7 +26,7 @@ export const useAddItemDialog = ({
     const serializedValue = getEditorChildrenSerialized(editor.children)
     try {
       await (window as any).electronAPI.createItem({
-        title,
+        name,
         description: serializedValue,
         categoryIds:
           categoriesMultiSelectContext.categoriesMultiSelectValue.map(
@@ -39,13 +39,7 @@ export const useAddItemDialog = ({
     } catch (e) {
       console.error(e)
     }
-  }, [
-    categoriesMultiSelectContext,
-    resetState,
-    handleModalClose,
-    editor,
-    title,
-  ])
+  }, [categoriesMultiSelectContext, resetState, handleModalClose, editor, name])
 
   const onClose = useCallback(() => {
     resetState()
@@ -53,7 +47,7 @@ export const useAddItemDialog = ({
   }, [resetState, handleModalClose])
 
   return {
-    onTitleChange,
+    onNameChange,
     editor,
     onConfirmClick,
     categoriesMultiSelectContext,

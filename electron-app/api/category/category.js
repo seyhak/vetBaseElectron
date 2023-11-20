@@ -6,22 +6,22 @@ const { CATEGORY_KEYS } = require("#root/constants.ts")
 const getListCategories = async (event, searchPhase) => {
   const where = searchPhase
     ? {
-      [Op.or]: [
-        Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
-          [Op.substring]: searchPhase,
-        }),
-        Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
-          [Op.substring]: searchPhase,
-        }),
-      ],
-    }
+        [Op.or]: [
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
+            [Op.substring]: searchPhase,
+          }),
+          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
+            [Op.substring]: searchPhase,
+          }),
+        ],
+      }
     : {}
 
   const items = await Category.findAll({
     attributes: ["id", "name", "description", "createdAt", "updatedAt"],
     where,
   })
-  // TODO write tests for this file and add TS
+
   await new Promise((resolve) => {
     setTimeout(resolve, 500)
   })

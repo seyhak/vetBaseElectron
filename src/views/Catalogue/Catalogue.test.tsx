@@ -14,7 +14,7 @@ describe("Catalogue", () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockReturnValue = {
-      onTitleChange: jest.fn(),
+      onNameChange: jest.fn(),
       onSaveClick: jest.fn(),
       onEditClick: jest.fn(),
       onDeleteClick: jest.fn(),
@@ -52,14 +52,14 @@ describe("Catalogue", () => {
   // })
   it.each(
     getListCatalogueResolvedValue.map((i, idx) => [
-      i.title,
+      i.name,
       getListCatalogueResolvedValue[idx],
     ]),
-  )("should call on Item Click properly - %s", async (title, expected) => {
+  )("should call on Item Click properly - %s", async (name, expected) => {
     const { baseElement } = render(<Catalogue />)
 
     expect(baseElement).toBeInTheDocument()
-    const itemInList = screen.queryByText(title)
+    const itemInList = screen.queryByText(name)
 
     expect(itemInList).toBeInTheDocument()
     await fireEvent.click(itemInList!)

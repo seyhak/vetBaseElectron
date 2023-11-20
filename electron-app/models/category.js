@@ -41,7 +41,7 @@ CategoryCatalogueItemThroughTable.init(
   },
   {
     sequelize,
-    freezeTableName: true
+    freezeTableName: true,
   },
 )
 // https://sequelize.org/docs/v6/advanced-association-concepts/advanced-many-to-many/#the-best-of-both-worlds-the-super-many-to-many-relationship

@@ -15,7 +15,7 @@ export const useCatalogue = () => {
   const [isAddingModalOpened, setIsAddingModalOpened] = useState(false)
   const [isEditModeOn, setIsEditModeOn] = useState(false)
   const [itemsList, setItemsList] = useState<Item[] | null>(null)
-  const [title, setTitle] = useState(selectedItem?.title)
+  const [name, setName] = useState(selectedItem?.name)
   const [itemDetailed, setItemDetailed] = useState<ItemDetailed | null>(null)
   const { editor, updateEditorContent } = useRichTextEditor()
   const location = useLocation()
@@ -25,7 +25,6 @@ export const useCatalogue = () => {
     async (id: string) => {
       const response = await (window as any).electronAPI.getDetailedItem(id)
       const loadedItem = JSON.parse(response)
-      console.log("loadedItem", loadedItem)
 
       const description = getEditorChildrenDeserialized(loadedItem.description)
       const detailedItem = {
@@ -34,7 +33,6 @@ export const useCatalogue = () => {
         photos: [PHOTO_SRC, PHOTO_SRC, PHOTO_SRC, PHOTO_SRC],
       } as ItemDetailed
 
-      console.log("detailedItem", detailedItem)
       setItemDetailed(detailedItem)
       updateEditorContent(description)
       categoriesMultiSelectContext.setCategoriesMultiSelectValue(
@@ -46,13 +44,16 @@ export const useCatalogue = () => {
 
   const loadDb = useCallback(
     async (searchPhase?: string) => {
+      const isGrouped = true
       const items = await (window as any).electronAPI.getListCatalogue(
         searchPhase,
+        isGrouped,
       )
+
       setItemsList(
         items.map((item: GetListCatalogueReturnItemDetailed) => ({
           ...item,
-          description: JSON.parse(item.description),
+          description: item.description ? JSON.parse(item.description) : null,
         })),
       )
     },
@@ -110,17 +111,17 @@ export const useCatalogue = () => {
   const editItem = useCallback(
     async ({
       id,
-      title,
+      name,
       description,
       categories,
     }: {
       id: string
-      title: string
+      name: string
       description: Descendant[]
       categories: string[]
     }) => {
       await (window as any).electronAPI.updateItem(id, {
-        title,
+        name,
         description: JSON.stringify(description),
         categories,
       })
@@ -133,7 +134,7 @@ export const useCatalogue = () => {
       setIsEditModeOn(false)
       await editItem({
         id: selectedItem!.id,
-        title: title!,
+        name: name!,
         description: editor.children,
         categories: categoriesMultiSelectContext.categoriesMultiSelectValue.map(
           (c) => c.id,
@@ -145,7 +146,7 @@ export const useCatalogue = () => {
       console.error(e)
     }
   }, [
-    title,
+    name,
     editor.children,
     loadDb,
     editItem,
@@ -155,15 +156,15 @@ export const useCatalogue = () => {
     categoriesMultiSelectContext,
   ])
 
-  const onTitleChange = useCallback(
+  const onNameChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setTitle(event.target.value)
+      setName(event.target.value)
     },
-    [setTitle],
+    [setName],
   )
 
   return {
-    onTitleChange,
+    onNameChange,
     onSaveClick,
     onEditClick,
     onDeleteClick,

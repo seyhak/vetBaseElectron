@@ -34,7 +34,7 @@ export const AddItemDialog = ({
   handleModalClose,
 }: AddItemDialogProps) => {
   const {
-    onTitleChange,
+    onNameChange,
     editor,
     onConfirmClick,
     categoriesMultiSelectContext,
@@ -53,7 +53,7 @@ export const AddItemDialog = ({
       <DialogContent dividers>
         <Box className="modal-add-position-wrapper">
           <TextField
-            className="title-input"
+            className="name-input"
             label="Title"
             variant="outlined"
             fullWidth
@@ -61,7 +61,7 @@ export const AddItemDialog = ({
             inputProps={{
               maxLength: 60,
             }}
-            onChange={onTitleChange}
+            onChange={onNameChange}
           />
           <CategoriesMultiSelect
             categoriesMultiSelectContextValue={categoriesMultiSelectContext}
