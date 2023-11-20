@@ -45,10 +45,10 @@ export const ConfirmDeleteButtonWithDialog = ({
         open={open}
         onClose={handleReject}
         className="confirm-delete-dialog"
-        aria-labelledby="alert-dialog-title"
+        aria-labelledby="alert-dialog-name"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Confirm deletion</DialogTitle>
+        <DialogTitle id="alert-dialog-name">Confirm deletion</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             This operation is irreversable

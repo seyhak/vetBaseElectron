@@ -1,9 +1,6 @@
 import { Box } from "@mui/system"
 import "./Catalogue.sass"
 import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemButton from "@mui/material/ListItemButton"
-import ListItemText from "@mui/material/ListItemText"
 import { Divider } from "@mui/material"
 
 import { NoItemPicked } from "./components/NoItemPicked/NoItemPicked"
@@ -12,6 +9,7 @@ import { AddItemDialog } from "./components/AddItemDialog/AddItemDialog"
 import { Controllers } from "./components/Controllers/Controllers"
 import { useCatalogue } from "./useCatalogue"
 import { CategoriesMultiSelectContext } from "components/CategoriesMultiSelect/useCategoriesMultiSelectContext"
+import { CatalogueItem } from "./components/CatalogueItem/CatalogueItem"
 
 export const Catalogue = () => {
   const {
@@ -23,7 +21,7 @@ export const Catalogue = () => {
     itemsList,
     onItemClick,
     itemDetailed,
-    onTitleChange,
+    onNameChange,
     isEditModeOn,
     editor,
     isAddingModalOpened,
@@ -46,14 +44,11 @@ export const Catalogue = () => {
           <List className="list">
             {itemsList?.map((listItem) => {
               return (
-                <ListItem key={listItem?.id} dense>
-                  <ListItemButton
-                    onClick={() => onItemClick(listItem)}
-                    selected={selectedItem?.id === listItem?.id}
-                  >
-                    <ListItemText primary={listItem?.title} />
-                  </ListItemButton>
-                </ListItem>
+                <CatalogueItem
+                  listItem={listItem}
+                  selectedItem={selectedItem}
+                  onItemClick={onItemClick}
+                />
               )
             })}
           </List>
@@ -62,7 +57,7 @@ export const Catalogue = () => {
             {selectedItem ? (
               <ItemDetails
                 itemDetailed={itemDetailed}
-                onTitleChange={onTitleChange}
+                onNameChange={onNameChange}
                 isEditModeOn={isEditModeOn}
                 editor={editor}
               />

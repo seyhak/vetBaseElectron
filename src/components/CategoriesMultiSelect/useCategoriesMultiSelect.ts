@@ -16,6 +16,7 @@ export const useCategoriesMultiSelect = ({
   const [allCategories, setAllCategories] = useState<Category[]>([])
   console.log("allCategories", allCategories)
 
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -30,11 +31,13 @@ export const useCategoriesMultiSelect = ({
   }, [])
   useEffect(() => {
     const search = ""
-    const shouldLoadCategories = isOpen && allCategories.length === 0
+    const shouldLoadCategories = isOpen && !isLoaded && !isLoading
+    console.log("shouldLoadCategories", shouldLoadCategories, isOpen)
     if (shouldLoadCategories) {
+      setIsLoaded(true)
       loadCategoriesList(search)
     }
-  }, [loadCategoriesList, isOpen, allCategories])
+  }, [loadCategoriesList, isOpen, allCategories, isLoading, isLoaded])
 
   const createCategory = useCallback(async (newCategoryName: string) => {
     console.log("createCategory", newCategoryName)

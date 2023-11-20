@@ -24,14 +24,14 @@ import {
 type ItemDetailsProps = {
   itemDetailed: ItemDetailed
   isEditModeOn: boolean
-  onTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   editor: BaseEditor & ReactEditor & HistoryEditor
 }
 
 export const ItemDetails = ({
   itemDetailed,
   isEditModeOn,
-  onTitleChange,
+  onNameChange,
   editor,
 }: ItemDetailsProps) => {
   const categoriesMultiSelectContextValue = useContext(
@@ -49,14 +49,14 @@ export const ItemDetails = ({
         <>
           <Box className="item-details-header">
             {!isEditModeOn ? (
-              <Typography variant="h4">{itemDetailed?.title}</Typography>
+              <Typography variant="h4">{itemDetailed?.name}</Typography>
             ) : (
               <TextField
-                label="title"
-                defaultValue={itemDetailed?.title}
+                label="name"
+                defaultValue={itemDetailed?.name}
                 variant="standard"
                 fullWidth
-                onChange={onTitleChange}
+                onChange={onNameChange}
               />
             )}
           </Box>
