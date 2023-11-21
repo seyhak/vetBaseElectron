@@ -1,14 +1,12 @@
 const {
   createItem,
+  bulkCreateItems,
   getListCatalogue,
   updateItem,
   getDetailedItem,
 } = require("./catalogue-item.js")
 const { CatalogueItem } = require("#root/models/catalogue-item.js")
-const {
-  Category,
-  CategoryCatalogueItemThroughTable,
-} = require("#root/models/category.js")
+const { Category } = require("#root/models/category.js")
 const { createCategory } = require("#root/api/category/category.js")
 const { synchronizeDb } = require("#root/electron-starter.func.ts")
 
@@ -19,189 +17,472 @@ const getListOfCatalogueItemsAndVerifyType = async (grouped = false) => {
 }
 
 describe("catalogue-item", () => {
-  // describe("createItem", () => {
-  //   beforeEach(async () => {
-  //     await synchronizeDb(true)
-  //   })
-  //   test("create properly", async () => {
-  //     const preTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(preTestList).toHaveLength(0)
+  describe("createItem", () => {
+    beforeEach(async () => {
+      await synchronizeDb(true)
+    })
+    test("create properly", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(preTestList).toHaveLength(0)
 
-  //     const creationResult = await createItem({}, { name: "test input 1", description: {}})
-  //     expect(typeof creationResult).toBe("string")
-  //     const jsonResult = JSON.parse(creationResult)
-  //     expect(jsonResult).toMatchObject({
-  //       id: expect.any(String),
-  //       name: expect.any(String),
-  //       description: expect.any(Object),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //     })
+      const creationResult = await createItem(
+        {},
+        { name: "test input 1", description: {} },
+      )
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toMatchObject({
+        id: expect.any(String),
+        name: expect.any(String),
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
 
-  //     const postTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(postTestList).toHaveLength(preTestList.length + 1)
-  //     expect(postTestList).toEqual([
-  //       expect.objectContaining({
-  //         "description": expect.any(Object),
-  //         "id": expect.any(String),
-  //         "name": "test input 1",
-  //       },)
-  //     ])
-  //   })
-  //   test("create with category", async () => {
-  //     const preTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(preTestList).toHaveLength(0)
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 1)
+      expect(postTestList).toEqual([
+        expect.objectContaining({
+          description: expect.any(Object),
+          id: expect.any(String),
+          name: "test input 1",
+        }),
+      ])
+    })
+    test("create with category", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(preTestList).toHaveLength(0)
 
-  //     const category1 = await Category.create({ name: "cat1", description: "i am dino" })
-  //     const category2 = await Category.create({ name: "cat2" })
-  //     await Category.create({ name: "cat3" })
-  //     expect(await Category.count()).toEqual(3)
+      const category1 = await Category.create({
+        name: "cat1",
+        description: "i am dino",
+      })
+      const category2 = await Category.create({ name: "cat2" })
+      await Category.create({ name: "cat3" })
+      expect(await Category.count()).toEqual(3)
 
-  //     const creationResult = await createItem({}, { name: "test input 1", description: {}, categoryIds: [
-  //       category1.id,
-  //       category2.id
-  //     ]})
-  //     console.log('creationResult', creationResult)
-  //     expect(typeof creationResult).toBe("string")
-  //     const jsonResult = JSON.parse(creationResult)
-  //     expect(jsonResult).toMatchObject({
-  //       id: expect.any(String),
-  //       name: expect.any(String),
-  //       description: expect.any(Object),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //     })
+      const creationResult = await createItem(
+        {},
+        {
+          name: "test input 1",
+          description: {},
+          categoryIds: [category1.id, category2.id],
+        },
+      )
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toMatchObject({
+        id: expect.any(String),
+        name: expect.any(String),
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
 
-  //     const createdItemStr = await getDetailedItem({}, jsonResult.id)
-  //     const createdItem = JSON.parse(createdItemStr)
-  //     expect(createdItem.Categories).toHaveLength(2)
-  //     expect(createdItem).toMatchObject({
-  //       id: expect.any(String),
-  //       name: expect.any(String),
-  //       description: expect.any(Object),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //       Categories: expect.arrayContaining([
-  //         {
-  //           id: expect.any(String),
-  //           name: "cat1",
-  //           description: "i am dino",
-  //           updatedAt: expect.any(String),
-  //         },
-  //         {
-  //           id: expect.any(String),
-  //           name: "cat2",
-  //           description: null,
-  //           updatedAt: expect.any(String),
-  //         },
-  //       ])
-  //     })
+      const createdItemStr = await getDetailedItem({}, jsonResult.id)
+      const createdItem = JSON.parse(createdItemStr)
+      expect(createdItem.Categories).toHaveLength(2)
+      expect(createdItem).toMatchObject({
+        id: expect.any(String),
+        name: expect.any(String),
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+        Categories: expect.arrayContaining([
+          {
+            id: expect.any(String),
+            name: "cat1",
+            description: "i am dino",
+            updatedAt: expect.any(String),
+          },
+          {
+            id: expect.any(String),
+            name: "cat2",
+            description: null,
+            updatedAt: expect.any(String),
+          },
+        ]),
+      })
 
-  //     const postTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(postTestList).toHaveLength(preTestList.length + 1)
-  //     expect(postTestList).toEqual([
-  //       expect.objectContaining({
-  //         "description": expect.any(Object),
-  //         "id": expect.any(String),
-  //         "name": "test input 1",
-  //       },)
-  //     ])
-  //   })
-  //   test.each([null, undefined])("create failed, no name - %s", async (name) => {
-  //     const preTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(preTestList).toHaveLength(0)
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 1)
+      expect(postTestList).toEqual([
+        expect.objectContaining({
+          description: expect.any(Object),
+          id: expect.any(String),
+          name: "test input 1",
+        }),
+      ])
+    })
+    test.each([null, undefined])(
+      "create failed, no name - %s",
+      async (name) => {
+        const preTestList = await getListOfCatalogueItemsAndVerifyType()
+        expect(preTestList).toHaveLength(0)
 
-  //     const creationResult = await createItem({}, { name, description: {}})
-  //     expect(typeof creationResult).toBe("string")
-  //     const jsonResult = JSON.parse(creationResult)
-  //     expect(jsonResult).toMatchObject({
-  //       name: "SequelizeValidationError",
-  //       errors: expect.any(Array),
-  //     })
+        const creationResult = await createItem({}, { name, description: {} })
+        expect(typeof creationResult).toBe("string")
+        const jsonResult = JSON.parse(creationResult)
+        expect(jsonResult).toMatchObject({
+          name: "SequelizeValidationError",
+          errors: expect.any(Array),
+        })
 
-  //     const postTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(postTestList).toHaveLength(preTestList.length)
-  //   })
-  // })
-  // describe("updateItem", () => {
-  //   beforeEach(async () => {
-  //     await synchronizeDb(true)
-  //   })
-  //   test("update with categories", async () => {
-  //     const preTestList = await getListOfCatalogueItemsAndVerifyType()
+        const postTestList = await getListOfCatalogueItemsAndVerifyType()
+        expect(postTestList).toHaveLength(preTestList.length)
+      },
+    )
+  })
+  describe("bulkCreateItems", () => {
+    let uploadData
+    beforeEach(async () => {
+      await synchronizeDb(true)
+      uploadData = [
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          groupName: "dog,cat",
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          groupName: "",
+          id: "5faff6b3-e33d-45d3-bb72-a6758761cfe6",
+          name: "test item 2",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          groupName: "",
+          id: "91aa6cde-2231-4f9d-91e9-6823c67f7bf2",
+          name: "Thor",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          groupName: "",
+          id: "24ae5e53-2c0e-44cc-bc8d-5bc728b17235",
+          name: "Hulk",
+        },
+      ]
+    })
+    test("bulk create with category", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(preTestList).toHaveLength(0)
 
-  //     const creationResult = await createItem({}, { name: "test input 1", description: {}})
-  //     expect(typeof creationResult).toBe("string")
-  //     const jsonResult = JSON.parse(creationResult)
-  //     expect(jsonResult).toMatchObject({
-  //       id: expect.any(String),
-  //       name: "test input 1",
-  //       description: expect.any(Object),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //     })
+      const category1 = await Category.create({
+        name: "cat1",
+        description: "i am dino",
+      })
+      const category2 = await Category.create({ name: "cat2" })
+      await Category.create({ name: "cat3" })
+      await CatalogueItem.create({ name: "wonder man" })
+      expect(await Category.count()).toEqual(3)
+      expect(await CatalogueItem.count()).toEqual(1)
 
-  //     const c1 = await createCategory({}, "cat1")
-  //     expect(typeof c1).toBe("string")
-  //     const category1 = JSON.parse(c1)
-  //     expect(category1).toMatchObject({
-  //       id: expect.any(String),
-  //       name: "cat1",
-  //       description: expect.any(String),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //     })
+      const creationResult = await bulkCreateItems({}, uploadData)
 
-  //     const c2 = await createCategory({}, "cat2")
-  //     expect(typeof c2).toBe("string")
-  //     const category2 = JSON.parse(c2)
-  //     expect(category2).toMatchObject({
-  //       id: expect.any(String),
-  //       name: "cat2",
-  //       description: expect.any(String),
-  //       updatedAt: expect.any(String),
-  //       createdAt: expect.any(String),
-  //     })
+      // assert on categories
+      const categoriesAll = await Category.count()
+      expect(categoriesAll).toEqual(4)
 
-  //     const updateContent = {
-  //       name: "changed test input 1",
-  //       categories: [
-  //         category1.id,
-  //         category2.id
-  //       ]
-  //     }
-  //     const updateResult = await updateItem({}, jsonResult.id, updateContent)
-  //     expect(updateResult).toBeUndefined()
+      // assert on result
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toEqual([
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "24ae5e53-2c0e-44cc-bc8d-5bc728b17235",
+          name: "Hulk",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "5faff6b3-e33d-45d3-bb72-a6758761cfe6",
+          name: "test item 2",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "91aa6cde-2231-4f9d-91e9-6823c67f7bf2",
+          name: "Thor",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [
+            {
+              CategoryCatalogueItemThroughTable: {
+                CatalogueItemId: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+                CategoryId: expect.any(String),
+                createdAt: expect.any(String),
+                id: 1,
+                updatedAt: expect.any(String),
+              },
+              createdAt: expect.any(String),
+              description: null,
+              id: expect.any(String),
+              name: "dog",
+              updatedAt: expect.any(String),
+            },
+            {
+              CategoryCatalogueItemThroughTable: {
+                CatalogueItemId: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+                CategoryId: expect.any(String),
+                createdAt: expect.any(String),
+                id: 2,
+                updatedAt: expect.any(String),
+              },
+              createdAt: expect.any(String),
+              description: null,
+              id: expect.any(String),
+              name: "cat",
+              updatedAt: expect.any(String),
+            },
+          ],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+          updatedAt: expect.any(String),
+        },
+      ])
 
-  //     const postTestList = await getListOfCatalogueItemsAndVerifyType()
-  //     expect(postTestList).toHaveLength(preTestList.length + 1)
+      // assert on post DB state
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 4)
+      expect(postTestList).toEqual([
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "5faff6b3-e33d-45d3-bb72-a6758761cfe6",
+          name: "test item 2",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "91aa6cde-2231-4f9d-91e9-6823c67f7bf2",
+          name: "Thor",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "24ae5e53-2c0e-44cc-bc8d-5bc728b17235",
+          name: "Hulk",
+        },
+      ])
+    })
+    test("create some elements already existing", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(preTestList).toHaveLength(0)
 
-  //     const updatedJson = await getDetailedItem({}, jsonResult.id)
-  //     const updated = JSON.parse(updatedJson)
-  //     expect(updated).toMatchObject({
-  //       "Categories": expect.arrayContaining([
-  //         {
-  //           "description": "",
-  //           "id": category1.id,
-  //           "name": "cat1",
-  //           "updatedAt": expect.any(String),
-  //         },
-  //         {
-  //           "description": "",
-  //           "id": category2.id,
-  //           "name": "cat2",
-  //           "updatedAt": expect.any(String),
-  //         }
-  //       ]),
-  //       "createdAt": expect.any(String),
-  //       "description": {},
-  //       "id": expect.any(String),
-  //       "name": expect.any(String),
-  //     })
-  //   })
-  //   test.skip("update without categories", async () => {})
-  //   test.skip("update failure with bad payload", async () => {})
-  // })
+      const category1 = await Category.create({
+        name: "cat1",
+        description: "i am dino",
+      })
+      const category2 = await Category.create({ name: "cat2" })
+      // create categories of item
+      const itemCategory1 = await Category.create({ name: "dog" })
+      const itemCategory2 = await Category.create({ name: "cat" })
+      // create item
+      const item = await CatalogueItem.create({
+        id: uploadData[0].id,
+        name: uploadData[0].name,
+        description: uploadData[0].description,
+      })
+      // add categories to item
+      await item.addCategory([
+        itemCategory1.dataValues.id,
+        itemCategory2.dataValues.id,
+      ])
+      // assert pre test db state
+      expect(await CatalogueItem.count()).toEqual(1)
+      expect(await Category.count()).toEqual(4)
+
+      // test
+      const creationResult = await bulkCreateItems({}, uploadData)
+
+      // assert on categories
+      expect(await Category.count()).toEqual(4)
+
+      // assert on result
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toEqual([
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "24ae5e53-2c0e-44cc-bc8d-5bc728b17235",
+          name: "Hulk",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "5faff6b3-e33d-45d3-bb72-a6758761cfe6",
+          name: "test item 2",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "91aa6cde-2231-4f9d-91e9-6823c67f7bf2",
+          name: "Thor",
+          updatedAt: expect.any(String),
+        },
+        {
+          Categories: [
+            {
+              CategoryCatalogueItemThroughTable: {
+                CatalogueItemId: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+                CategoryId: expect.any(String),
+                createdAt: expect.any(String),
+                id: 1,
+                updatedAt: expect.any(String),
+              },
+              createdAt: expect.any(String),
+              description: null,
+              id: expect.any(String),
+              name: "dog",
+              updatedAt: expect.any(String),
+            },
+            {
+              CategoryCatalogueItemThroughTable: {
+                CatalogueItemId: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+                CategoryId: expect.any(String),
+                createdAt: expect.any(String),
+                id: 2,
+                updatedAt: expect.any(String),
+              },
+              createdAt: expect.any(String),
+              description: null,
+              id: expect.any(String),
+              name: "cat",
+              updatedAt: expect.any(String),
+            },
+          ],
+          createdAt: expect.any(String),
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+          updatedAt: expect.any(String),
+        },
+      ])
+
+      // assert on post DB state
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 4)
+      expect(postTestList).toEqual([
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "5faff6b3-e33d-45d3-bb72-a6758761cfe6",
+          name: "test item 2",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "91aa6cde-2231-4f9d-91e9-6823c67f7bf2",
+          name: "Thor",
+        },
+        {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          id: "24ae5e53-2c0e-44cc-bc8d-5bc728b17235",
+          name: "Hulk",
+        },
+      ])
+    })
+  })
+  describe("updateItem", () => {
+    beforeEach(async () => {
+      await synchronizeDb(true)
+    })
+    test("update with categories", async () => {
+      const preTestList = await getListOfCatalogueItemsAndVerifyType()
+
+      const creationResult = await createItem(
+        {},
+        { name: "test input 1", description: {} },
+      )
+      expect(typeof creationResult).toBe("string")
+      const jsonResult = JSON.parse(creationResult)
+      expect(jsonResult).toMatchObject({
+        id: expect.any(String),
+        name: "test input 1",
+        description: expect.any(Object),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
+
+      const c1 = await createCategory({}, "cat1")
+      expect(typeof c1).toBe("string")
+      const category1 = JSON.parse(c1)
+      expect(category1).toMatchObject({
+        id: expect.any(String),
+        name: "cat1",
+        description: expect.any(String),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
+
+      const c2 = await createCategory({}, "cat2")
+      expect(typeof c2).toBe("string")
+      const category2 = JSON.parse(c2)
+      expect(category2).toMatchObject({
+        id: expect.any(String),
+        name: "cat2",
+        description: expect.any(String),
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String),
+      })
+
+      const updateContent = {
+        name: "changed test input 1",
+        categories: [category1.id, category2.id],
+      }
+      const updateResult = await updateItem({}, jsonResult.id, updateContent)
+      expect(updateResult).toBeUndefined()
+
+      const postTestList = await getListOfCatalogueItemsAndVerifyType()
+      expect(postTestList).toHaveLength(preTestList.length + 1)
+
+      const updatedJson = await getDetailedItem({}, jsonResult.id)
+      const updated = JSON.parse(updatedJson)
+      expect(updated).toMatchObject({
+        Categories: expect.arrayContaining([
+          {
+            description: "",
+            id: category1.id,
+            name: "cat1",
+            updatedAt: expect.any(String),
+          },
+          {
+            description: "",
+            id: category2.id,
+            name: "cat2",
+            updatedAt: expect.any(String),
+          },
+        ]),
+        createdAt: expect.any(String),
+        description: {},
+        id: expect.any(String),
+        name: expect.any(String),
+      })
+    })
+    test.skip("update without categories", async () => {})
+    test.skip("update failure with bad payload", async () => {})
+  })
   describe("getListCatalogue", () => {
     beforeEach(async () => {
       await synchronizeDb(true)

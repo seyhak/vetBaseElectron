@@ -66,6 +66,17 @@ destroyItemById(event, id) -> undefined
 updateItem(event, id, content: item properties) -> undefined | error
 ```
 
+#### bulkCreateItems
+
+```
+items: ex.{
+    description: '[{"type":"paragraph","children":[{"text":""}]}]',
+    groupName: "dog,cat",
+    id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+    name: "test item ABCD",
+}
+bulkCreateItems(event, items) -> string
+```
 ### category
 
 #### getListCatalogue

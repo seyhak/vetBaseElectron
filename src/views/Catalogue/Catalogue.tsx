@@ -31,7 +31,7 @@ export const Catalogue = () => {
 
   return (
     <CategoriesMultiSelectContext.Provider value={categoriesMultiSelectContext}>
-      <Box className="catalogue-wrapper">
+      <Box className="catalogue-view">
         <Controllers
           onDeleteClick={onDeleteClick}
           onAddClick={onAddClick}
@@ -45,6 +45,7 @@ export const Catalogue = () => {
             {itemsList?.map((listItem) => {
               return (
                 <CatalogueItem
+                  key={listItem?.id}
                   listItem={listItem}
                   selectedItem={selectedItem}
                   onItemClick={onItemClick}

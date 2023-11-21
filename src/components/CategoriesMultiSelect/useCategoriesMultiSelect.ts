@@ -14,7 +14,6 @@ export const useCategoriesMultiSelect = ({
   const { categoriesMultiSelectValue, setCategoriesMultiSelectValue } =
     categoriesMultiSelectContextValue
   const [allCategories, setAllCategories] = useState<Category[]>([])
-  console.log("allCategories", allCategories)
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -25,14 +24,12 @@ export const useCategoriesMultiSelect = ({
     const categoriesList = (await (
       window as any
     ).electronAPI.getListCategories()) as Category[]
-    console.log("allCategories", categoriesList)
     setAllCategories(categoriesList)
     setIsLoading(false)
   }, [])
   useEffect(() => {
     const search = ""
     const shouldLoadCategories = isOpen && !isLoaded && !isLoading
-    console.log("shouldLoadCategories", shouldLoadCategories, isOpen)
     if (shouldLoadCategories) {
       setIsLoaded(true)
       loadCategoriesList(search)
@@ -40,7 +37,6 @@ export const useCategoriesMultiSelect = ({
   }, [loadCategoriesList, isOpen, allCategories, isLoading, isLoaded])
 
   const createCategory = useCallback(async (newCategoryName: string) => {
-    console.log("createCategory", newCategoryName)
     let result: null | Category = null
     try {
       setIsLoading(true)

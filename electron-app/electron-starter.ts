@@ -14,6 +14,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
     },
+    title: "My App",
+    icon: path.join(__dirname, "./images/icon.jpeg"),
   })
 
   synchronizeDb()
@@ -53,6 +55,7 @@ app.whenReady().then(() => {
     categoryAPI.destroyCategoryById,
   )
   ipcMain.handle("catalogue:updateCategory", categoryAPI.updateCategory)
+  ipcMain.handle("import:bulkCreateItems", catalogueItemAPI.bulkCreateItems)
   createWindow()
 
   app.on("activate", function () {

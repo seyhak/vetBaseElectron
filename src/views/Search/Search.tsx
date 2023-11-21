@@ -35,7 +35,7 @@ const Search = () => {
   )
 
   return (
-    <Box className="search-container">
+    <Box className="search-view">
       <Box className="circle">
         <Box className="header">
           <div className="logo-wrapper">
