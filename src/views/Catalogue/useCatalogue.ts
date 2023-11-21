@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from "react"
-import { Item, ItemDetailed } from "types/item.types"
+import { Item, ItemDetailed } from "types/item"
 import { useRichTextEditor } from "components/RichTextEditor/useRichTextEditor"
 import { getEditorChildrenDeserialized } from "components/RichTextEditor/RichTextEditor.functions"
 import { Descendant } from "slate"
 import { useLocation } from "react-router-dom"
-import { GetListCatalogueReturnItemDetailed } from "types/item.types"
+import { GetListCatalogueReturnItemDetailed } from "types/item"
 import { useCategoriesMultiSelectContext } from "components/CategoriesMultiSelect/useCategoriesMultiSelectContext"
 
 const PHOTO_SRC =

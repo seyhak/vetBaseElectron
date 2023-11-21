@@ -10,12 +10,15 @@
 
 ### MAJOR
 
-- [ ] Google Cloud sync
 - [ ] electron goes TS and sequelize TS
 - [ ] CSV export/import
+- [ ] Google Cloud sync
 
 ### MINOR
 
+- [ ] auto import sort hook
+- [ ] from csv file import data preview
+- [ ] color palette/themes in settings ?
 - [ ] add proper error informations on FE
 - [ ] add proper docker stuff
 - [ ] change logo and add cute images
@@ -23,7 +26,6 @@
 - [ ] create form from create modal - useform
 - [ ] refactor useCatalogue to use useReducer?
 - [ ] setup debug env for VS - https://www.electronjs.org/docs/latest/tutorial/debugging-vscode
-- [ ] jest config "eltest": "jest electron --notify --config=jest.config.ts",
 
 #### FAILED
 

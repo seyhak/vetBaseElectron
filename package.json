@@ -1,5 +1,5 @@
 {
-  "name": "vetBaseElectron",
+  "name": "VetBaseElectron",
   "version": "1.0.0",
   "main": "electron-app/electron-starter.ts",
   "homepage": "./",

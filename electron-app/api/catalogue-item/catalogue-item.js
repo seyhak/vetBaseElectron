@@ -1,8 +1,9 @@
+const { Sequelize, Op } = require("sequelize")
+const { difference, pick } = require("lodash")
 const { Category } = require("#root/models/category.js")
 const { CatalogueItem } = require("#root/models/catalogue-item.js")
-const { Sequelize, Op } = require("sequelize")
 const { CATEGORY_KEYS } = require("#root/constants.ts")
-const { difference, pick } = require("lodash")
+const { getOrCreateCategoryByNames } = require("#root/utils/category.utils.js")
 
 const handleCategoriesAddRemove = async (
   categoryIds,
@@ -124,6 +125,97 @@ const createItem = async (event, { name, description, categoryIds }) => {
   }
 }
 
+// TODO after ts is added
+class BulkCreateItemsHandler {
+  items
+
+  constructor(items) {
+    this.items = items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+    }))
+  }
+}
+/**
+ * Returns CSV string splitted into rows and columns, remove doublequotes
+ * https://github.com/peterthoeny/parse-csv-js, MIT License
+ * @param {items} array example {
+          description: '[{"type":"paragraph","children":[{"text":""}]}]',
+          groupName: "dog,cat",
+          id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
+          name: "test item ABCD",
+        },
+ */
+const bulkCreateItems = async (event, items) => {
+  const itemsDetails = items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    description: item.description,
+  }))
+  const categoriesPerItem = items
+    .map((item) => {
+      const groupNames = item.groupName
+        .split(",")
+        .map((group) => group)
+        .filter((name) => !!name)
+      if (!!groupNames.length) {
+        return [item.id, groupNames]
+      }
+      return null
+    })
+    .filter((item) => !!item)
+
+  try {
+    const itemNames = await CatalogueItem.findAll({
+      attributes: ["name"],
+    })
+    const itemNamesArr = itemNames.map((el) => el.name)
+    const filteredItemsDetails = itemsDetails.filter(
+      (el) => !itemNamesArr.includes(el.name),
+    )
+    const createdItems = await CatalogueItem.bulkCreate(filteredItemsDetails)
+
+    const hasCategoriesToAdd = categoriesPerItem.length > 0
+    if (hasCategoriesToAdd) {
+      const allCategoryNames = categoriesPerItem
+        .map(([itemId, categoryNames]) => {
+          return categoryNames
+        })
+        .flat()
+      const categories = await getOrCreateCategoryByNames(allCategoryNames)
+
+      await Promise.all(
+        categoriesPerItem.map(async ([itemId, categoryNames]) => {
+          const categoriesOfItem = categories.filter((category) =>
+            categoryNames.includes(category.dataValues.name),
+          )
+          if (!!categoriesOfItem.length) {
+            let item = createdItems.find((el) => el.dataValues.id === itemId)
+            if (!item) {
+              item = await CatalogueItem.findByPk(itemId)
+            }
+            await item.addCategory(categoriesOfItem)
+          }
+        }),
+      )
+    }
+    const allItemsIds = itemsDetails.map((item) => item.id)
+    const itemsWithCategories = await CatalogueItem.findAll({
+      include: { model: Category },
+      where: {
+        id: {
+          [Sequelize.Op.in]: allItemsIds,
+        },
+      },
+    })
+    return JSON.stringify(itemsWithCategories)
+  } catch (error) {
+    console.error(error)
+    return JSON.stringify(error)
+  }
+}
+
 const getDetailedItem = async (event, id) => {
   const detailedItem = await CatalogueItem.findByPk(id, {
     include: { model: Category },
@@ -141,12 +233,11 @@ const getDetailedItem = async (event, id) => {
       pick(cat, CATEGORY_KEYS),
     ),
   }
-  console.log("getDetailedItem", requiredData)
+
   return JSON.stringify(requiredData)
 }
 
 const destroyItemById = async (event, id) => {
-  console.log("destroyItemById", id)
   await CatalogueItem.destroy({
     where: {
       id: id,
@@ -155,7 +246,6 @@ const destroyItemById = async (event, id) => {
 }
 
 const updateItem = async (event, id, content) => {
-  console.log("updateItem", id, content)
   const categoryIds = content.categories
 
   try {
@@ -187,3 +277,4 @@ exports.getListCatalogue = getListCatalogue
 exports.createItem = createItem
 exports.destroyItemById = destroyItemById
 exports.updateItem = updateItem
+exports.bulkCreateItems = bulkCreateItems

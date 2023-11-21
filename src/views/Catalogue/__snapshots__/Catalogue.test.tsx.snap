@@ -3,7 +3,7 @@
 exports[`Catalogue renders properly no item selected 1`] = `
 <DocumentFragment>
   <div
-    class="catalogue-wrapper MuiBox-root css-0"
+    class="catalogue-view MuiBox-root css-0"
   >
     <div
       class="controllers-wrapper MuiBox-root css-0"

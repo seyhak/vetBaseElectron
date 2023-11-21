@@ -46,12 +46,10 @@ const createCategory = async (event, name, description = "") => {
 
 const getDetailedCategory = async (event, id) => {
   const detailedItem = await Category.findByPk(id)
-  console.log("detailedItem", detailedItem)
   return detailedItem.dataValues.map((cat) => pick(cat, CATEGORY_KEYS))
 }
 
 const destroyCategoryById = async (event, id) => {
-  console.log("destroyCategoryById", id)
   await Category.destroy({
     where: {
       id: id,

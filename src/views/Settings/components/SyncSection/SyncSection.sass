@@ -1,0 +1,36 @@
+.sync-section
+  display: flex
+  flex: 1
+  justify-content: space-evenly
+  svg
+    font-size: 2em
+
+  .import-button
+    border-radius: 180px
+    svg
+      font-size: 56px
+    .file-input
+      clip: rect(0 0 0 0)
+      clip-path: inset(50%)
+      height: 1px
+      overflow: hidden
+      position: absolute
+      bottom: 0
+      left: 0
+      white-space: nowrap
+      width: 1px
+  .snackbar
+    min-width: 35%
+    .snackbar-alert
+      width: 100%
+      .MuiAlert-message
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-direction: column
+        flex: 1
+        .message
+          flex: 1
+          display: flex
+          align-items: center
+          justify-content: center

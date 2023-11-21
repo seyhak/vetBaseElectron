@@ -18,4 +18,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("catalogue:destroyCategoryById", id),
   updateCategory: (id, content) =>
     ipcRenderer.invoke("catalogue:updateCategory", id, content),
+  bulkCreateItems: (items) =>
+    ipcRenderer.invoke("import:bulkCreateItems", items),
 })

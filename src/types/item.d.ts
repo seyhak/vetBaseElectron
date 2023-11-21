@@ -9,13 +9,11 @@ export type CatalogueItem = {
   groupId: string | null
 }
 
-export type Item = {
-  id: string
-  name: string
-  description: string
-  groupId: string | null
-  items?: CatalogueItem[]
-} | null
+export type Item =
+  | ({
+      items?: CatalogueItem[]
+    } & CatalogueItem)
+  | null
 
 export type ItemDetailed =
   | ({
@@ -28,3 +26,4 @@ export type ItemDetailed =
   | null
 
 export type GetListCatalogueReturnItemDetailed = CatalogueItem
+export type GetListCatalogueReturnGrouped = Required<Item[]>

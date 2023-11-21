@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material"
 import "./ItemDetails.sass"
-import { ItemDetailed } from "types/item.types"
+import { ItemDetailed } from "types/item"
 
 import CircularProgress from "@mui/material/CircularProgress"
 import RichTextEditor from "components/RichTextEditor/RichTextEditor"
