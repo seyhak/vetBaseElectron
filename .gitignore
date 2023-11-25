@@ -26,3 +26,7 @@ yarn-error.log*
 /db
 # electron-forge products
 /out
+credentials.json
+.env
+token.json
+credentials.backup.json

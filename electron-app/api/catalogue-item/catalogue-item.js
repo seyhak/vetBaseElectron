@@ -148,6 +148,7 @@ class BulkCreateItemsHandler {
         },
  */
 const bulkCreateItems = async (event, items) => {
+  console.log("bulkCreateItems", items)
   const itemsDetails = items.map((item) => ({
     id: item.id,
     name: item.name,

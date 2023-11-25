@@ -1,6 +1,6 @@
-## ELECTRON API
+# ELECTRON API
 
-### catalogue item
+## catalogue item
 
 #### getListCatalogue
 
@@ -77,7 +77,8 @@ items: ex.{
 }
 bulkCreateItems(event, items) -> string
 ```
-### category
+
+## category
 
 #### getListCatalogue
 
@@ -120,4 +121,22 @@ destroyCategoryById(event, id) -> undefined
 
 ```
 updateCategory(event, id, content) -> undefined
+```
+
+## google-drive
+
+#### importDataFromGoogleDrive
+
+imports data from file from GoogleDrive to DB
+
+```
+importDataFromGoogleDrive() -> string
+```
+
+#### exportDataAsCsvToGoogleDrive
+
+exports data to file in GoogleDrive
+
+```
+exportDataAsCsvToGoogleDrive() -> createdFileId
 ```

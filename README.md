@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### RUN APP DEV
+## RUN APP DEV
 
 #### RUN FE
 
@@ -103,4 +103,15 @@ type: fix/feat - !breaking changes
 [optional body]
 
 [optional footer(s)]
+```
+
+## GOOGLE API:
+
+1. credentials file should be automaticly created with proper values based on credentials.public.json
+2. file is named: `credentials.json`
+3. empty keys should be put in envvars in `.env`
+
+```
+GOOGLE_CLIENT_SECRET="<proper-value>"
+GOOGLE_CLIENT_ID="<proper-value>"
 ```

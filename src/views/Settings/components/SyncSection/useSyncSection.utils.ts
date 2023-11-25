@@ -1,6 +1,6 @@
 import { pick } from "lodash"
 import { GetListCatalogueReturnGrouped } from "types/item"
-import { CsvRowObj, FromCsvImporter } from "utils/csv-importer"
+import { FromCsvImporter } from "utils/csv-importer"
 
 type ItemIdToItemDetails = {
   [key: string]: {

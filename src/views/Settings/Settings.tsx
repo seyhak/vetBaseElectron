@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 
-import { SettingsSections, useSettings } from "views/Settings/useSettings"
+import { useSettings } from "views/Settings/useSettings"
 
 import { SectionControllers } from "./components/SectionControllers/SectionControllers"
 import { SyncSection } from "./components/SyncSection/SyncSection"

@@ -48,6 +48,8 @@ describe("useSyncSection.utils.test", () => {
       ])
     })
     test("error", async () => {
+      const mockConsole = jest.fn()
+      jest.spyOn(console, "error").mockImplementation((err) => mockConsole(err))
       mockBulkCreateItems.mockImplementation(() => {
         throw new Error("test error")
       })
@@ -55,6 +57,7 @@ describe("useSyncSection.utils.test", () => {
         type: "text/csv",
       })
       await expect(handleCsvImport(file)).rejects.toThrowError("test error")
+      expect(mockConsole).toBeCalled()
       expect(mockBulkCreateItems).toBeCalledWith([
         {
           description: '[{"type":"paragraph","children":[{"text":""}]}]',

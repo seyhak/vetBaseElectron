@@ -2,6 +2,7 @@
 
 - [x] add categories to add item
 - [x] add categories to edit item
+- [ ] check if category - items connections is bug on prod
 - [ ] categories manage section -> reshape catalogue to show categories which will be expanded to show items in the category
 - [x] search phase information, reset search
 - [x] add tests to electron and FE if reasonable with test DB
@@ -11,8 +12,8 @@
 ### MAJOR
 
 - [ ] electron goes TS and sequelize TS
-- [ ] CSV export/import
-- [ ] Google Cloud sync
+- [x] CSV export/import
+- [x] Google Cloud sync
 
 ### MINOR
 

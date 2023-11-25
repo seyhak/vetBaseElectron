@@ -7,9 +7,12 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined"
 import Search from "./views/Search/Search"
 import { Routes, Route } from "react-router-dom"
 import { Catalogue } from "./views/Catalogue/Catalogue"
+import { AppSnackbar } from "components/AppSnackbar/AppSnackbar"
 import { Settings } from "views/Settings/Settings"
 import { ViewsPaths } from "types/routes.types"
 import "./App.sass"
+import { useAppSnackbar } from "components/AppSnackbar/useAppSnackbar"
+import { AppSnackbarContext } from "contexts/AppSnackbarContext"
 
 const App = () => {
   const location = useLocation()
@@ -20,6 +23,7 @@ const App = () => {
     },
     [navigate],
   )
+  const useAppSnackbarValue = useAppSnackbar()
 
   return (
     <Box className="App">
@@ -39,13 +43,16 @@ const App = () => {
           />
         </Tabs>
       </Box>
-      <Box className="content-container">
-        <Routes>
-          <Route path={ViewsPaths.Search} element={<Search />} />
-          <Route path={ViewsPaths.Catalogue} element={<Catalogue />} />
-          <Route path={ViewsPaths.Settings} element={<Settings />} />
-        </Routes>
-      </Box>
+      <AppSnackbarContext.Provider value={useAppSnackbarValue}>
+        <Box className="content-container">
+          <Routes>
+            <Route path={ViewsPaths.Search} element={<Search />} />
+            <Route path={ViewsPaths.Catalogue} element={<Catalogue />} />
+            <Route path={ViewsPaths.Settings} element={<Settings />} />
+          </Routes>
+        </Box>
+        <AppSnackbar />
+      </AppSnackbarContext.Provider>
     </Box>
   )
 }
