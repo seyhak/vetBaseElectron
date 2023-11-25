@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron")
 const catalogueItemAPI = require("./api/catalogue-item/catalogue-item")
 const categoryAPI = require("./api/category/category")
+const googleDriveAPI = require("./api/google-drive/google-drive")
 const path = require("node:path")
 const { synchronizeDb } = require("./electron-starter.func.ts")
 
@@ -56,6 +57,20 @@ app.whenReady().then(() => {
   )
   ipcMain.handle("catalogue:updateCategory", categoryAPI.updateCategory)
   ipcMain.handle("import:bulkCreateItems", catalogueItemAPI.bulkCreateItems)
+  ipcMain.handle(
+    "google-drive:getAuthorization",
+    googleDriveAPI.getAuthorization,
+  )
+  ipcMain.handle("google-drive:getListFiles", googleDriveAPI.getListFiles)
+  ipcMain.handle(
+    "google-drive:exportDataAsCsvToGoogleDrive",
+    googleDriveAPI.exportDataAsCsvToGoogleDrive,
+  )
+  ipcMain.handle(
+    "google-drive:importDataFromGoogleDrive",
+    googleDriveAPI.importDataFromGoogleDrive,
+  )
+
   createWindow()
 
   app.on("activate", function () {

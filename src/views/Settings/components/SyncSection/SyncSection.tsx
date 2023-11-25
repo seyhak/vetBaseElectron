@@ -1,73 +1,27 @@
-import {
-  Box,
-  IconButton,
-  Tooltip,
-  Button,
-  Snackbar,
-  Alert,
-  AlertTitle,
-  Typography,
-} from "@mui/material"
+import { Box, Paper } from "@mui/material"
+import ArticleIcon from "@mui/icons-material/Article"
 
-import FileDownloadIcon from "@mui/icons-material/FileDownload"
-import UploadIcon from "@mui/icons-material/Upload"
 import { useSyncSection } from "./useSyncSection"
+import { GoogleDriveSync } from "../GoogleDriveSync/GoogleDriveSync"
+import { ImportExportButtons } from "../ImportExportButtons/ImportExportButtons"
 import "./SyncSection.sass"
 
 export const SyncSection = () => {
-  const {
-    onExportToCSVClick,
-    onImportFromCSVChange,
-    snackbarState,
-    onSnackbarClose,
-  } = useSyncSection()
+  const { onExportToCSVClick, onImportFromCSVChange, isLoading } =
+    useSyncSection()
   return (
     <Box className="sync-section">
-      <Tooltip title="Export data to CSV">
-        <IconButton
-          size="large"
-          aria-label="export-to-csv"
-          color="primary"
-          onClick={onExportToCSVClick}
-        >
-          <UploadIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Import data from CSV">
-        <Button
-          className="import-button"
-          size="large"
-          component="label"
-          aria-label="import-from-csv"
-          color="primary"
-        >
-          <input
-            type="file"
-            onChange={onImportFromCSVChange}
-            className="file-input"
-            accept=".csv"
-          />
-
-          <FileDownloadIcon />
-        </Button>
-      </Tooltip>
-      <Snackbar
-        open={snackbarState.isOpened}
-        autoHideDuration={6000}
-        onClose={onSnackbarClose}
-        className="snackbar"
-      >
-        <Alert
-          variant="filled"
-          severity={snackbarState.type}
-          className="snackbar-alert"
-        >
-          <AlertTitle>{snackbarState.type.toUpperCase()}</AlertTitle>
-          <Typography className="message">
-            {snackbarState.message || "Success!"}
-          </Typography>
-        </Alert>
-      </Snackbar>
+      <Paper variant="outlined" square>
+        <ImportExportButtons
+          onExportClick={onExportToCSVClick}
+          onImportChange={onImportFromCSVChange}
+          icon={<ArticleIcon color="primary" />}
+          isLoading={isLoading}
+        />
+      </Paper>
+      <Paper variant="outlined" square>
+        <GoogleDriveSync />
+      </Paper>
     </Box>
   )
 }

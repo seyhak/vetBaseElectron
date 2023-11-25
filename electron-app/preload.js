@@ -20,4 +20,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("catalogue:updateCategory", id, content),
   bulkCreateItems: (items) =>
     ipcRenderer.invoke("import:bulkCreateItems", items),
+  getAuthorization: () => ipcRenderer.invoke("google-drive:getAuthorization"),
+  getListFiles: () => ipcRenderer.invoke("google-drive:getListFiles"),
+  exportDataAsCsvToGoogleDrive: () =>
+    ipcRenderer.invoke("google-drive:exportDataAsCsvToGoogleDrive"),
+  importDataFromGoogleDrive: () =>
+    ipcRenderer.invoke("google-drive:importDataFromGoogleDrive"),
 })
