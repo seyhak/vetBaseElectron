@@ -40,11 +40,11 @@ export const CatalogueItem = ({
             </ListItemButton>
           </ListItem>
           <Collapse timeout="auto" in={isCollapseOpened}>
-            {categoryItems.map((item) => (
+            {categoryItems.map((item, idx) => (
               <ListItem
                 key={`${listItem?.id}-${item.id}`}
                 dense
-                divider
+                divider={categoryItems.length - 1 === idx}
                 disablePadding
               >
                 <ListItemButton

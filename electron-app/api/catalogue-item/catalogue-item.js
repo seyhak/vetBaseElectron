@@ -87,26 +87,45 @@ const getListCatalogue = async (event, searchPhase, grouped = false) => {
   const where = searchPhase
     ? {
         [Op.or]: [
-          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("name")), {
-            [Op.substring]: searchPhase,
-          }),
-          Sequelize.where(Sequelize.fn("UPPER", Sequelize.col("description")), {
-            [Op.substring]: searchPhase,
-          }),
+          Sequelize.where(
+            Sequelize.fn("UPPER", Sequelize.col("CatalogueItem.name")),
+            {
+              [Op.substring]: searchPhase,
+            },
+          ),
+          Sequelize.where(
+            Sequelize.fn("UPPER", Sequelize.col("CatalogueItem.description")),
+            {
+              [Op.substring]: searchPhase,
+            },
+          ),
+          grouped &&
+            Sequelize.where(
+              Sequelize.fn("UPPER", Sequelize.col("Categories.name")),
+              {
+                [Op.substring]: searchPhase,
+              },
+            ),
         ],
       }
     : {}
 
   const include = grouped ? { model: Category } : null
-  const items = await CatalogueItem.findAll({
-    attributes: ["id", "name", "description"],
-    include,
-    where,
-  })
-  if (grouped) {
-    return getCatalogueItemsGroupedByCategories(items)
+  try {
+    const items = await CatalogueItem.findAll({
+      attributes: ["id", "name", "description"],
+      include,
+      where,
+    })
+
+    if (grouped) {
+      return getCatalogueItemsGroupedByCategories(items)
+    }
+    return items.map((item) => item.dataValues)
+  } catch (err) {
+    console.error(err)
+    throw err
   }
-  return items.map((item) => item.dataValues)
 }
 
 const createItem = async (event, { name, description, categoryIds }) => {
