@@ -168,21 +168,23 @@ describe("catalogue-item", () => {
       const preTestList = await getListOfCatalogueItemsAndVerifyType()
       expect(preTestList).toHaveLength(0)
 
-      const category1 = await Category.create({
+      await Category.create({
         name: "cat1",
         description: "i am dino",
       })
-      const category2 = await Category.create({ name: "cat2" })
+      await Category.create({ name: "cat2" })
       await Category.create({ name: "cat3" })
       await CatalogueItem.create({ name: "wonder man" })
-      expect(await Category.count()).toEqual(3)
+      const preBulkCreateCategoryCount = 3
+      expect(await Category.count()).toEqual(preBulkCreateCategoryCount)
       expect(await CatalogueItem.count()).toEqual(1)
 
       const creationResult = await bulkCreateItems({}, uploadData)
 
       // assert on categories
       const categoriesAll = await Category.count()
-      expect(categoriesAll).toEqual(4)
+      // should create 2 categories as cat and dog from data dump doesnt exist
+      expect(categoriesAll).toEqual(preBulkCreateCategoryCount + 2)
 
       // assert on result
       expect(typeof creationResult).toBe("string")
@@ -253,8 +255,14 @@ describe("catalogue-item", () => {
 
       // assert on post DB state
       const postTestList = await getListOfCatalogueItemsAndVerifyType()
-      expect(postTestList).toHaveLength(preTestList.length + 4)
+      // 1 created later in test, 4 created via bulkCreate
+      expect(postTestList).toHaveLength(preTestList.length + 5)
       expect(postTestList).toEqual([
+        {
+          description: null,
+          id: expect.any(String),
+          name: "wonder man",
+        },
         {
           description: '[{"type":"paragraph","children":[{"text":""}]}]',
           id: "bcee9bab-57c5-48d8-a2ab-8e10bceb3d6f",
@@ -577,6 +585,90 @@ describe("catalogue-item", () => {
           groupId: null,
           id: ci5.id,
           name: "test input 5",
+        },
+      ])
+    })
+    test.each([
+      {
+        field: "name",
+        value: "dino",
+        search: "dino",
+        expected: {
+          description: null,
+          groupId: null,
+          id: expect.any(String),
+          name: "dino",
+        },
+      },
+      {
+        field: "description",
+        value:
+          '[{"type":"paragraph","children":[{"text":"dinos like tropical temperatures"}]}]',
+        search: "dino",
+        expected: {
+          name: "godzilla",
+          id: expect.any(String),
+          groupId: null,
+          description:
+            '[{"type":"paragraph","children":[{"text":"dinos like tropical temperatures"}]}]',
+        },
+      },
+    ])(
+      "success with search grouped with no groups",
+      async ({ field, value, search, expected }) => {
+        const result1 = await getListOfCatalogueItemsAndVerifyType()
+        expect(result1).toEqual([])
+        await CatalogueItem.create({ name: "test input 1" })
+        await CatalogueItem.create({ name: "test input 2" })
+        const input = {
+          name: "godzilla",
+          [field]: value,
+        }
+        await CatalogueItem.create(input)
+        const result2 = await getListCatalogue({}, "", true)
+        expect(Array.isArray(result2)).toBeTruthy()
+        expect(result2).toHaveLength(3)
+        const result3 = await getListCatalogue({}, search, true)
+        expect(result3).toHaveLength(1)
+        expect(result3).toEqual([expected])
+      },
+    )
+    test.only("success with search grouped with groups", async () => {
+      const result1 = await getListOfCatalogueItemsAndVerifyType()
+      expect(result1).toEqual([])
+      const cat = await Category.create({ name: "beasts" })
+      const godzilla = await CatalogueItem.create({ name: "godzilla" })
+      const kong = await CatalogueItem.create({ name: "kong" })
+      await CatalogueItem.create({ name: "test input 2" })
+      await godzilla.addCategory(cat)
+      await kong.addCategory(cat)
+
+      const result2 = await getListCatalogue({}, "", true)
+      expect(Array.isArray(result2)).toBeTruthy()
+      // should return all
+      expect(result2).toHaveLength(2)
+      const result3 = await getListCatalogue({}, "beasts", true)
+      expect(result3).toHaveLength(1)
+      expect(result3).toEqual([
+        {
+          description: null,
+          groupId: null,
+          id: cat.id,
+          items: expect.arrayContaining([
+            {
+              description: null,
+              groupId: cat.id,
+              id: godzilla.id,
+              name: "godzilla",
+            },
+            {
+              description: null,
+              groupId: cat.id,
+              id: kong.id,
+              name: "kong",
+            },
+          ]),
+          name: "beasts",
         },
       ])
     })
