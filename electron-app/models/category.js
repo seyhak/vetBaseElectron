@@ -1,6 +1,6 @@
 const { CatalogueItem } = require("./catalogue-item")
 const { DataTypes, Model } = require("sequelize")
-const { sequelize } = require("./index")
+const db = require("./index")
 
 class Category extends Model {}
 
@@ -22,7 +22,7 @@ Category.init(
     },
   },
   {
-    sequelize,
+    sequelize: db.sequelize,
     modelName: "Category",
     timestamps: true,
   },
@@ -40,7 +40,7 @@ CategoryCatalogueItemThroughTable.init(
     },
   },
   {
-    sequelize,
+    sequelize: db.sequelize,
     freezeTableName: true,
   },
 )

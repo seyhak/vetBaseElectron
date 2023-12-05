@@ -2,7 +2,7 @@
 
 - [x] add categories to add item
 - [x] add categories to edit item
-- [ ] check if category - items connections is bug on prod
+- [x] check if category - items connections is bug on prod
 - [ ] categories manage section -> reshape catalogue to show categories which will be expanded to show items in the category
 - [x] search phase information, reset search
 - [x] add tests to electron and FE if reasonable with test DB
@@ -11,6 +11,8 @@
 
 ### MAJOR
 
+- [ ] secure credentials.json after electron-build -> require password, hash
+- [x] add sequelize migrations
 - [ ] electron goes TS and sequelize TS
 - [x] CSV export/import
 - [x] Google Cloud sync

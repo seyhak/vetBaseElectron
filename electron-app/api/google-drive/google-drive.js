@@ -23,10 +23,15 @@ const SCOPES = [
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = path.join(process.cwd(), "token.json")
-const CREDENTIALS_PATH = path.join(process.cwd(), "credentials.json")
+const TOKEN_PATH = path.join(process.cwd(), "resources", "token.json")
+const CREDENTIALS_PATH = path.join(
+  process.cwd(),
+  "resources",
+  "credentials.json",
+)
 const DEFAULT_CREDENTIALS_PATH = path.join(
   process.cwd(),
+  "resources",
   "credentials.public.json",
 )
 
@@ -39,6 +44,13 @@ async function loadSavedCredentialsIfExist() {
   try {
     const content = await fsPromises.readFile(TOKEN_PATH)
     const credentials = JSON.parse(content)
+    const now = new Date()
+    const tokenDate = new Date(credentials.expiry_date)
+    const isTokenExpired = now - tokenDate >= 0
+    if (isTokenExpired) {
+      await fsPromises.rm(TOKEN_PATH)
+      return null
+    }
     return google.auth.fromJSON(credentials)
   } catch (err) {
     return null
@@ -52,11 +64,13 @@ async function loadSavedCredentialsIfExist() {
  * @return {Promise<void>}
  */
 async function saveCredentials(client) {
+  console.log({ client })
   const payload = JSON.stringify({
     type: "authorized_user",
     client_id: process.env["GOOGLE_CLIENT_ID"],
     client_secret: process.env["GOOGLE_CLIENT_SECRET"],
     refresh_token: client.credentials.refresh_token,
+    expiry_date: client.credentials.expiry_date,
   })
   await fsPromises.writeFile(TOKEN_PATH, payload)
 }
@@ -76,7 +90,8 @@ async function generateCredentials() {
   const payload = JSON.stringify({
     installed: {
       ...key,
-      ...secretData,
+      client_id: secretData.client_id || key.client_id,
+      client_secret: secretData.client_secret || key.client_secret,
     },
   })
   await fsPromises.writeFile(CREDENTIALS_PATH, payload)
