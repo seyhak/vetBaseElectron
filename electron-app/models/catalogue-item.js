@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require("sequelize")
-const { sequelize } = require("./index")
+const db = require("./index")
 
 class CatalogueItem extends Model {}
 
@@ -20,7 +20,7 @@ CatalogueItem.init(
     },
   },
   {
-    sequelize,
+    sequelize: db.sequelize,
     modelName: "CatalogueItem",
     timestamps: true,
   },

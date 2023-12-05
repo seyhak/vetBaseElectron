@@ -1,9 +1,9 @@
 const { sequelize } = require("./models/index")
 
-async function synchronizeDb(force = false) {
+async function synchronizeDb(force = false, alter = true) {
   const syncKwargs = {
     force,
-    alter: !force,
+    alter,
   }
   try {
     await sequelize.sync(syncKwargs)
